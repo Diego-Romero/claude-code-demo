@@ -1,13 +1,19 @@
-import { authTables } from "@convex-dev/auth/server";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
-// The schema is normally optional, but Convex Auth
-// requires indexes defined on `authTables`.
 export default defineSchema({
-  ...authTables,
-  messages: defineTable({
-    userId: v.id("users"),
-    body: v.string(),
-  }),
+  users: defineTable({
+    email: v.string(),
+    name: v.optional(v.string()),
+    image: v.optional(v.string()),
+  }).index("by_email", ["email"]),
+
+  incidents: defineTable({
+    title: v.string(),
+    description: v.string(),
+    severity: v.union(v.literal("P0"), v.literal("P1"), v.literal("P2"), v.literal("P3")),
+    status: v.union(v.literal("active"), v.literal("resolved")),
+    assignee: v.optional(v.string()),
+    resolvedAt: v.optional(v.number()),
+  }).index("by_status", ["status"]),
 });
