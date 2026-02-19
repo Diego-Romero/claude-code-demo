@@ -1,4 +1,4 @@
-# Claude Code Demo — Incident Tracker
+# Claude Code Demo — Incident Tracker 🚀
 
 ## Purpose
 A real-time incident tracker built as a demo project for a "Claude Code Tips & Tricks" engineering presentation. It showcases plan mode, CLAUDE.md, Playwright testing, and other Claude Code features in a realistic but simple codebase.
