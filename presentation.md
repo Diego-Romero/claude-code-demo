@@ -690,5 +690,5 @@ Your codebase deserves one. Stack, commands, conventions, patterns, review check
 `/skill-creator`, `/ralph-loop`, `/learning-output-style` — the ecosystem is growing fast. Spend time with the ones that match how your team works.
 
 **4. Connect MCP servers**
-Convex, GitHub, Playwright, your internal APIs. The more context Claude has at runtime, the more thorough and accurate its work becomes. Start with one and see the difference.
+Mongo, GitHub, Playwright, your internal APIs. The more context Claude has at runtime, the more thorough and accurate its work becomes. Start with one and see the difference.
 
