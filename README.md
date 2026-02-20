@@ -120,3 +120,4 @@ Three aesthetic directions for the UI, generated with the `/frontend-design` ski
 ## About this project
 
 This project was built as part of a Claude Code demo to show engineering teams how to use Claude Code effectively — from spinning up a project to shipping features with confidence. The code was written collaboratively with [Claude Code](https://claude.ai/claude-code).
+
