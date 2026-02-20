@@ -105,6 +105,18 @@ npm run dev
 
 This runs the Next.js frontend and Convex backend in parallel.
 
+## Design Moodboards
+
+Three aesthetic directions for the UI, generated with the `/frontend-design` skill. Open while the dev server is running (`npm run dev`):
+
+| # | Aesthetic | URL |
+|---|---|---|
+| 1 | **Midnight Ops** — Modern SaaS dark (Linear/Vercel-style), indigo-black, violet chrome, red→green severity scale. Plus Jakarta Sans + DM Mono | [/moodboard-1.html](http://localhost:3000/moodboard-1.html) |
+| 2 | **Hazmat** — True black, safety orange dominant, diagonal caution-stripe borders on P0 cards. Barlow Condensed 900 + Space Mono | [/moodboard-2.html](http://localhost:3000/moodboard-2.html) |
+| 3 | **Clean Room** — Clinical white, single blue accent, severity as patient-monitor vitals cards. DM Sans + DM Mono | [/moodboard-3.html](http://localhost:3000/moodboard-3.html) |
+
+---
+
 ## About this project
 
 This project was built as part of a Claude Code demo to show engineering teams how to use Claude Code effectively — from spinning up a project to shipping features with confidence. The code was written collaboratively with [Claude Code](https://claude.ai/claude-code).

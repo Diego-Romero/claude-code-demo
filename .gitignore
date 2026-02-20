@@ -27,6 +27,10 @@ tests/e2e/.auth
 .DS_Store
 .vscode/
 *.pem
+.playwright-mcp/
+/public/moodboard-*.html
+/moodboard-*.png
+/presentation.html
 
 # debug
 npm-debug.log*
