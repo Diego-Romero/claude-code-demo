@@ -17,7 +17,6 @@ export const create = mutation({
     assignee: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    if (!await ctx.auth.getUserIdentity()) throw new Error("Unauthenticated");
     return ctx.db.insert("incidents", { ...args, status: "active" });
   },
 });
@@ -25,7 +24,6 @@ export const create = mutation({
 export const resolve = mutation({
   args: { id: v.id("incidents") },
   handler: async (ctx, { id }) => {
-    if (!await ctx.auth.getUserIdentity()) throw new Error("Unauthenticated");
     await ctx.db.patch(id, { status: "resolved", resolvedAt: Date.now() });
   },
 });
@@ -39,7 +37,6 @@ export const update = mutation({
     assignee: v.optional(v.string()),
   },
   handler: async (ctx, { id, ...fields }) => {
-    if (!await ctx.auth.getUserIdentity()) throw new Error("Unauthenticated");
     await ctx.db.patch(id, fields);
   },
 });
@@ -47,7 +44,6 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("incidents") },
   handler: async (ctx, { id }) => {
-    if (!await ctx.auth.getUserIdentity()) throw new Error("Unauthenticated");
     await ctx.db.delete(id);
   },
 });
