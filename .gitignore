@@ -29,7 +29,6 @@ tests/e2e/.auth
 *.pem
 .playwright-mcp/
 /public/moodboard-*.html
-/public/presentation.html
 /moodboard-*.png
 /presentation.html
 

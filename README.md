@@ -1,45 +1,40 @@
 # Claude Code Demo — Incident Tracker
 
-A demo project built live during a **Claude Code: Tips & Tricks** presentation. It's a real-time incident tracker for engineering teams — think lightweight PagerDuty. The entire app is built incrementally using Claude Code, showcasing how AI-assisted development works in practice from planning through review.
+A real-time incident tracker built as the live demo vehicle for a **Claude Code: Tips & Tricks** engineering presentation. The app is intentionally simple so the focus stays on the Claude Code workflows, not the product.
 
-## What this demo covers
+## Presentation
 
-Each feature in this app was (or will be) built to demonstrate a specific Claude Code workflow:
+The slide deck lives in [`presentation.md`](./presentation.md) (Marp format) and is automatically converted to HTML during the build:
 
-| Claude Code concept | What gets built |
-|---|---|
-| Starting a session + CLAUDE.md | Project setup, initial schema |
-| MCP servers | Playwright MCP connected for live test feedback |
-| Plan mode | Feature architecture designed before any code is written |
-| Skills | Marketplace skills installed and used mid-feature |
-| Validating work | Playwright E2E tests run via MCP, Convex dashboard live |
-| Commit checkpoints | Logical commits at each working milestone |
-| PR review | `pr-review-toolkit` agents reviewing the diff |
-| CLAUDE.md evolution | File updated based on what Claude got wrong |
-| Parallel worktrees | Two features built simultaneously |
-| Subagents from events | GitHub issue created → agent fixes it → PR opened |
+```bash
+npm run build   # runs marp first, then next build
+```
+
+The generated `public/presentation.html` is committed to the repo and deployed to Vercel — accessible at `/presentation.html` on the live site. To regenerate it locally after editing the slides:
+
+```bash
+npm run prebuild
+```
 
 ## The app
 
-A real-time incident tracker where engineering teams can:
+A lightweight incident tracker where engineering teams can:
 
-- **Create incidents** with title, severity (P0–P3), and description
-- **Assign responders** and track who is on point
-- **Post timeline updates** as the incident evolves
-- **Mark incidents resolved** and write post-mortem notes
-- **View a live dashboard** — open incidents sorted by severity
+- **Create incidents** with title, severity (P0–P3), assignee, and description
+- **Resolve or delete incidents** from the dashboard
+- **View all incidents** (active + resolved) in a full table view
+- **Real-time updates** — Convex pushes changes via WebSocket, no refresh needed
 
 ## Tech stack
 
 | Layer | Technology |
 |---|---|
 | Framework | [Next.js 15](https://nextjs.org/) (App Router) |
-| Backend | [Convex](https://convex.dev/) (database + real-time subscriptions) |
-| Auth | [Convex Auth](https://labs.convex.dev/auth) (GitHub OAuth + password) |
+| Backend | [Convex](https://convex.dev/) — cloud DB, real-time subscriptions, TypeScript mutations |
+| Auth | [NextAuth v5](https://authjs.dev/) — credentials provider, JWT sessions |
 | UI | [shadcn/ui](https://ui.shadcn.com/) + [Tailwind CSS](https://tailwindcss.com/) |
-| Testing | [Playwright](https://playwright.dev/) |
-
-Everything runs locally — no external services required.
+| Unit tests | [Vitest](https://vitest.dev/) |
+| E2E tests | [Playwright](https://playwright.dev/) |
 
 ## Getting started
 
@@ -54,69 +49,69 @@ Everything runs locally — no external services required.
 npm install
 ```
 
-### 2. Set up Convex
+### 2. Configure environment variables
 
-```bash
-npx convex dev
+Create `.env.local`:
+
+```
+CONVEX_DEPLOYMENT=...
+NEXT_PUBLIC_CONVEX_URL=...
+NEXT_PUBLIC_CONVEX_SITE_URL=...
+AUTH_SECRET=...
+DEMO_EMAIL=demo@incident.dev
+DEMO_PASSWORD=demo1234
+DEMO_NAME=Demo User
 ```
 
-This will prompt you to log in to Convex and create a new project. Keep this terminal running — it syncs your backend in real time.
-
-### 3. Run the app
-
-In a second terminal:
+### 3. Start the dev server
 
 ```bash
-npm run dev:frontend
+npm run dev     # Next.js + Convex in parallel
 ```
 
-Visit [http://localhost:3000](http://localhost:3000).
+Visit [http://localhost:3000](http://localhost:3000) and sign in with the demo credentials.
 
-### 4. Run Playwright tests
+### 4. Seed sample data (optional)
 
 ```bash
-npx playwright test
+npx convex run seed:run
 ```
 
-Or connect via the [Playwright MCP](https://github.com/microsoft/playwright-mcp) to let Claude run and observe tests directly.
+## Running tests
+
+```bash
+npm run test        # Vitest unit tests
+npm run test:e2e    # Playwright E2E tests (hits the real Convex cloud DB)
+```
 
 ## Project structure
 
 ```
-├── app/                  # Next.js App Router pages
-│   ├── (splash)/         # Public landing page
-│   ├── product/          # Protected app (requires auth)
-│   └── signin/           # Auth pages
-├── convex/               # Convex backend
-│   ├── auth.ts           # Auth configuration
-│   ├── schema.ts         # Database schema
-│   └── incidents.ts      # Incident queries & mutations
-├── components/           # Shared UI components
-└── tests/                # Playwright E2E tests
+app/
+  dashboard/        # Active incidents — create, resolve, delete
+  incidents/        # All incidents table (active + resolved)
+  signin/           # Email/password sign-in
+convex/
+  schema.ts         # DB schema
+  incidents.ts      # CRUD queries and mutations
+  seed.ts           # Sample data
+tests/
+  unit/             # Vitest
+  e2e/              # Playwright
+presentation.md     # Marp slide deck (source)
+public/
+  presentation.html # Generated from presentation.md at build time
 ```
 
-## Running the full dev environment
+## CI
 
-The `predev` script handles first-time Convex setup automatically:
+GitHub Actions runs on every PR to `main`:
 
-```bash
-npm run dev
-```
-
-This runs the Next.js frontend and Convex backend in parallel.
-
-## Design Moodboards
-
-Three aesthetic directions for the UI, generated with the `/frontend-design` skill. Open while the dev server is running (`npm run dev`):
-
-| # | Aesthetic | URL |
-|---|---|---|
-| 1 | **Midnight Ops** — Modern SaaS dark (Linear/Vercel-style), indigo-black, violet chrome, red→green severity scale. Plus Jakarta Sans + DM Mono | [/moodboard-1.html](http://localhost:3000/moodboard-1.html) |
-| 2 | **Hazmat** — True black, safety orange dominant, diagonal caution-stripe borders on P0 cards. Barlow Condensed 900 + Space Mono | [/moodboard-2.html](http://localhost:3000/moodboard-2.html) |
-| 3 | **Clean Room** — Clinical white, single blue accent, severity as patient-monitor vitals cards. DM Sans + DM Mono | [/moodboard-3.html](http://localhost:3000/moodboard-3.html) |
+1. Lint (`next lint`)
+2. Unit tests (`vitest run`)
+3. Type check (`tsc --noEmit`)
+4. Build — which includes generating `presentation.html` via `prebuild`
 
 ---
 
-## About this project
-
-This project was built as part of a Claude Code demo to show engineering teams how to use Claude Code effectively — from spinning up a project to shipping features with confidence. The code was written collaboratively with [Claude Code](https://claude.ai/claude-code).
+Built collaboratively with [Claude Code](https://claude.ai/claude-code).
