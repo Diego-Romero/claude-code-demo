@@ -5,10 +5,18 @@ test.describe("All Incidents", () => {
     await page.goto("/incidents");
   });
 
-  test("shows all incidents in a table including resolved ones", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "All Incidents" })).toBeVisible();
-    await expect(page.getByRole("cell", { name: "active" }).first()).toBeVisible();
-    await expect(page.getByRole("cell", { name: "resolved" }).first()).toBeVisible();
+  test("shows all incidents in a table including resolved ones", async ({
+    page,
+  }) => {
+    await expect(
+      page.getByRole("heading", { name: "All Incidents" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: "active" }).first(),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: "resolved" }).first(),
+    ).toBeVisible();
   });
 
   test("shows severity badges in the table", async ({ page }) => {
@@ -17,14 +25,24 @@ test.describe("All Incidents", () => {
   });
 
   test("resolved incidents do not show a Resolve button", async ({ page }) => {
-    const resolvedRow = page.locator("tbody tr").filter({ hasText: "resolved" }).first();
+    const resolvedRow = page
+      .locator("tbody tr")
+      .filter({ hasText: "resolved" })
+      .first();
     await expect(resolvedRow).toBeVisible();
-    await expect(resolvedRow.getByRole("button", { name: "Resolve" })).not.toBeVisible();
+    await expect(
+      resolvedRow.getByRole("button", { name: "Resolve" }),
+    ).not.toBeVisible();
   });
 
   test("active incidents show a Resolve button", async ({ page }) => {
-    const activeRow = page.locator("tbody tr").filter({ hasText: "active" }).first();
-    await expect(activeRow.getByRole("button", { name: "Resolve" })).toBeVisible();
+    const activeRow = page
+      .locator("tbody tr")
+      .filter({ hasText: "active" })
+      .first();
+    await expect(
+      activeRow.getByRole("button", { name: "Resolve" }),
+    ).toBeVisible();
   });
 });
 
@@ -38,7 +56,9 @@ test.describe("Navigation", () => {
     await expect(page).toHaveURL("/dashboard");
   });
 
-  test("unauthenticated users are redirected to signin", async ({ browser }) => {
+  test("unauthenticated users are redirected to signin", async ({
+    browser,
+  }) => {
     const freshContext = await browser.newContext({ storageState: undefined });
     const freshPage = await freshContext.newPage();
 

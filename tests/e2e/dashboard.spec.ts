@@ -6,13 +6,20 @@ test.describe("Dashboard", () => {
   });
 
   test("shows the dashboard heading and incident count", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Dashboard" }),
+    ).toBeVisible();
     await expect(page.getByText(/active incident/)).toBeVisible();
   });
 
   test("lists active incidents with severity badges", async ({ page }) => {
     await expect(page.getByText("API gateway returning 503s")).toBeVisible();
-    await expect(page.getByTestId("incident-card").first().getByText(/P[0-3]/)).toBeVisible();
+    await expect(
+      page
+        .getByTestId("incident-card")
+        .first()
+        .getByText(/P[0-3]/),
+    ).toBeVisible();
   });
 
   test("can create a new incident", async ({ page }) => {
@@ -20,7 +27,9 @@ test.describe("Dashboard", () => {
     await page.getByRole("button", { name: "New incident" }).click();
 
     await page.getByLabel("Title").fill(title);
-    await page.getByLabel("Description").fill("This is a test incident created by the E2E suite.");
+    await page
+      .getByLabel("Description")
+      .fill("This is a test incident created by the E2E suite.");
     await page.getByLabel("Severity").selectOption("P2");
     await page.getByLabel("Assignee (email)").fill("playwright@test.dev");
     await page.getByRole("button", { name: "Create incident" }).click();

@@ -41,11 +41,21 @@ export default function AllIncidentsPage() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Severity</th>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Title</th>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Assignee</th>
-                <th className="text-left px-4 py-3 font-medium text-muted-foreground">Created</th>
+                <th className="text-left px-4 py-3 font-medium text-muted-foreground">
+                  Severity
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-muted-foreground">
+                  Title
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-muted-foreground">
+                  Status
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-muted-foreground">
+                  Assignee
+                </th>
+                <th className="text-left px-4 py-3 font-medium text-muted-foreground">
+                  Created
+                </th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
@@ -53,16 +63,22 @@ export default function AllIncidentsPage() {
               {incidents.map((incident) => (
                 <tr key={incident._id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
-                    <span className={`rounded border px-2 py-0.5 text-xs font-semibold ${severityStyles[incident.severity]}`}>
+                    <span
+                      className={`rounded border px-2 py-0.5 text-xs font-semibold ${severityStyles[incident.severity]}`}
+                    >
                       {incident.severity}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <p className="font-medium">{incident.title}</p>
-                    <p className="text-muted-foreground line-clamp-1 text-xs mt-0.5">{incident.description}</p>
+                    <p className="text-muted-foreground line-clamp-1 text-xs mt-0.5">
+                      {incident.description}
+                    </p>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[incident.status]}`}>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[incident.status]}`}
+                    >
                       {incident.status}
                     </span>
                   </td>
@@ -75,11 +91,28 @@ export default function AllIncidentsPage() {
                   <td className="px-4 py-3">
                     <div className="flex gap-2 justify-end">
                       {incident.status === "active" && (
-                        <Button size="sm" variant="outline" onClick={() => resolveIncident({ id: incident._id as Id<"incidents"> })}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            resolveIncident({
+                              id: incident._id as Id<"incidents">,
+                            })
+                          }
+                        >
                           Resolve
                         </Button>
                       )}
-                      <Button size="sm" variant="ghost" className="text-red-500 hover:text-red-600" onClick={() => removeIncident({ id: incident._id as Id<"incidents"> })}>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-red-500 hover:text-red-600"
+                        onClick={() =>
+                          removeIncident({
+                            id: incident._id as Id<"incidents">,
+                          })
+                        }
+                      >
                         Delete
                       </Button>
                     </div>

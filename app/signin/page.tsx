@@ -36,17 +36,35 @@ export default function SignInPage() {
       <div className="w-full max-w-sm space-y-6 rounded-xl border bg-white p-8 shadow-sm">
         <div className="space-y-1 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
-          <p className="text-sm text-muted-foreground">Continue to Incident Tracker</p>
+          <p className="text-sm text-muted-foreground">
+            Continue to Incident Tracker
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label htmlFor="email" className="text-sm font-medium">Email</label>
-            <Input id="email" name="email" type="email" required autoComplete="email" />
+            <label htmlFor="email" className="text-sm font-medium">
+              Email
+            </label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+            />
           </div>
           <div className="space-y-1">
-            <label htmlFor="password" className="text-sm font-medium">Password</label>
-            <Input id="password" name="password" type="password" required autoComplete="current-password" />
+            <label htmlFor="password" className="text-sm font-medium">
+              Password
+            </label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              required
+              autoComplete="current-password"
+            />
           </div>
           {error && <p className="text-sm text-red-500">{error}</p>}
           <Button type="submit" className="w-full" disabled={loading}>

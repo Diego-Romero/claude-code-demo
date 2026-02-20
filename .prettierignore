@@ -1,0 +1,21 @@
+# Dependencies
+node_modules
+
+# Next.js build output
+.next
+out
+build
+
+# Convex generated files (auto-generated, not to be formatted)
+convex/_generated
+
+# Test output / auth state
+playwright-report
+test-results
+tests/e2e/.auth
+coverage
+
+# Misc
+.DS_Store
+*.pem
+package-lock.json

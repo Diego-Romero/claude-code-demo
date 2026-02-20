@@ -47,7 +47,8 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-2xl font-semibold">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {incidents?.length ?? "—"} active incident{incidents?.length !== 1 ? "s" : ""}
+            {incidents?.length ?? "—"} active incident
+            {incidents?.length !== 1 ? "s" : ""}
           </p>
         </div>
         <Button onClick={() => setShowForm((v) => !v)}>
@@ -57,25 +58,67 @@ export default function DashboardPage() {
 
       {/* Create form */}
       {showForm && (
-        <form onSubmit={handleCreate} className="mb-6 rounded-lg border bg-gray-50 p-5 space-y-4">
+        <form
+          onSubmit={handleCreate}
+          className="mb-6 rounded-lg border bg-gray-50 p-5 space-y-4"
+        >
           <h2 className="font-medium text-sm">New incident</h2>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2 space-y-1">
-              <label htmlFor="title" className="text-xs font-medium text-muted-foreground">Title</label>
-              <Input id="title" name="title" required placeholder="Short description of the issue" />
+              <label
+                htmlFor="title"
+                className="text-xs font-medium text-muted-foreground"
+              >
+                Title
+              </label>
+              <Input
+                id="title"
+                name="title"
+                required
+                placeholder="Short description of the issue"
+              />
             </div>
             <div className="space-y-1">
-              <label htmlFor="severity" className="text-xs font-medium text-muted-foreground">Severity</label>
-              <select id="severity" name="severity" required className="w-full rounded-md border px-3 py-2 text-sm bg-white">
-                {SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}
+              <label
+                htmlFor="severity"
+                className="text-xs font-medium text-muted-foreground"
+              >
+                Severity
+              </label>
+              <select
+                id="severity"
+                name="severity"
+                required
+                className="w-full rounded-md border px-3 py-2 text-sm bg-white"
+              >
+                {SEVERITIES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="space-y-1">
-              <label htmlFor="assignee" className="text-xs font-medium text-muted-foreground">Assignee (email)</label>
-              <Input id="assignee" name="assignee" type="email" placeholder="who@team.dev" />
+              <label
+                htmlFor="assignee"
+                className="text-xs font-medium text-muted-foreground"
+              >
+                Assignee (email)
+              </label>
+              <Input
+                id="assignee"
+                name="assignee"
+                type="email"
+                placeholder="who@team.dev"
+              />
             </div>
             <div className="col-span-2 space-y-1">
-              <label htmlFor="description" className="text-xs font-medium text-muted-foreground">Description</label>
+              <label
+                htmlFor="description"
+                className="text-xs font-medium text-muted-foreground"
+              >
+                Description
+              </label>
               <textarea
                 id="description"
                 name="description"
@@ -87,8 +130,16 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
-            <Button type="submit" disabled={saving}>{saving ? "Creating…" : "Create incident"}</Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowForm(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? "Creating…" : "Create incident"}
+            </Button>
           </div>
         </form>
       )}
@@ -98,20 +149,32 @@ export default function DashboardPage() {
         <p className="text-sm text-muted-foreground">Loading…</p>
       ) : incidents.length === 0 ? (
         <div className="rounded-lg border border-dashed p-12 text-center">
-          <p className="text-sm text-muted-foreground">No active incidents. All clear! 🎉</p>
+          <p className="text-sm text-muted-foreground">
+            No active incidents. All clear! 🎉
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
           {incidents.map((incident) => (
-            <div key={incident._id} data-testid="incident-card" className="rounded-lg border bg-white p-5 flex items-start gap-4">
-              <span className={`mt-0.5 shrink-0 rounded border px-2 py-0.5 text-xs font-semibold ${severityStyles[incident.severity]}`}>
+            <div
+              key={incident._id}
+              data-testid="incident-card"
+              className="rounded-lg border bg-white p-5 flex items-start gap-4"
+            >
+              <span
+                className={`mt-0.5 shrink-0 rounded border px-2 py-0.5 text-xs font-semibold ${severityStyles[incident.severity]}`}
+              >
                 {incident.severity}
               </span>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm">{incident.title}</p>
-                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{incident.description}</p>
+                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                  {incident.description}
+                </p>
                 <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                  {incident.assignee && <span>Assigned to {incident.assignee}</span>}
+                  {incident.assignee && (
+                    <span>Assigned to {incident.assignee}</span>
+                  )}
                   <span>{formatDistanceToNow(incident._creationTime)} ago</span>
                 </div>
               </div>
@@ -119,7 +182,9 @@ export default function DashboardPage() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => resolveIncident({ id: incident._id as Id<"incidents"> })}
+                  onClick={() =>
+                    resolveIncident({ id: incident._id as Id<"incidents"> })
+                  }
                 >
                   Resolve
                 </Button>
@@ -127,7 +192,9 @@ export default function DashboardPage() {
                   size="sm"
                   variant="ghost"
                   className="text-red-500 hover:text-red-600"
-                  onClick={() => removeIncident({ id: incident._id as Id<"incidents"> })}
+                  onClick={() =>
+                    removeIncident({ id: incident._id as Id<"incidents"> })
+                  }
                 >
                   Delete
                 </Button>

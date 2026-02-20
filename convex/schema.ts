@@ -11,7 +11,12 @@ export default defineSchema({
   incidents: defineTable({
     title: v.string(),
     description: v.string(),
-    severity: v.union(v.literal("P0"), v.literal("P1"), v.literal("P2"), v.literal("P3")),
+    severity: v.union(
+      v.literal("P0"),
+      v.literal("P1"),
+      v.literal("P2"),
+      v.literal("P3"),
+    ),
     status: v.union(v.literal("active"), v.literal("resolved")),
     assignee: v.optional(v.string()),
     resolvedAt: v.optional(v.number()),

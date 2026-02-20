@@ -7,7 +7,9 @@ export default function HomePage() {
       <header className="border-b px-6 py-4 flex items-center justify-between">
         <span className="font-semibold text-lg">Incident Tracker</span>
         <Link href="/signin">
-          <Button variant="outline" size="sm">Sign in</Button>
+          <Button variant="outline" size="sm">
+            Sign in
+          </Button>
         </Link>
       </header>
 
