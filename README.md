@@ -25,11 +25,9 @@ The generated `public/presentation.html` is committed to the repo and deployed t
 After editing the slides, regenerate and commit the HTML:
 
 ```bash
-npm run prebuild   # regenerates public/presentation.html
+npm run slides   # regenerates public/presentation.html
 git add presentation.md public/presentation.html && git commit
 ```
-
-> Vercel skips the prebuild step (configured in `vercel.json`) to avoid the slow Puppeteer/Chromium download on every deploy. The committed HTML is used directly.
 
 ## The app
 
