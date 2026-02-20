@@ -670,3 +670,25 @@ All must pass with zero errors. Output
 
 **Watch for:** Claude failing a type check, seeing the error on the next loop, fixing it, iterating until all checks pass — without any human input.
 
+---
+
+<!-- _class: section -->
+
+# Next Steps
+
+---
+
+### What to do next
+
+**1. Write/Improve our `CLAUDE.md` files**
+Your codebase deserves one. Stack, commands, conventions, patterns, review checklist. The better it is, the better every session starts — for you *and* anyone who clones the repo.
+
+**2. Install skills and build processes around them**
+`/commit`, `/code-review`, `/feature-dev` — pick the ones that fit your workflow and make them habitual. The real gain is consistency, not just speed.
+
+**3. Keep exploring the plugin ecosystem**
+`/skill-creator`, `/ralph-loop`, `/learning-output-style` — the ecosystem is growing fast. Spend time with the ones that match how your team works.
+
+**4. Connect MCP servers**
+Convex, GitHub, Playwright, your internal APIs. The more context Claude has at runtime, the more thorough and accurate its work becomes. Start with one and see the difference.
+
