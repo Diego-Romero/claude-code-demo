@@ -2,10 +2,20 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 export const list = query({
-  args: { status: v.optional(v.union(v.literal("active"), v.literal("resolved"))) },
-  handler: async (ctx, { status }) => {
-    if (status) return ctx.db.query("incidents").withIndex("by_status", (q) => q.eq("status", status)).order("desc").collect();
-    return ctx.db.query("incidents").order("desc").collect();
+  args: {
+    status: v.optional(v.union(v.literal("active"), v.literal("resolved"))),
+    assignee: v.optional(v.string()),
+  },
+  handler: async (ctx, { status, assignee }) => {
+    const results = await (
+      status
+        ? ctx.db.query("incidents").withIndex("by_status", (q) => q.eq("status", status))
+        : ctx.db.query("incidents")
+    )
+      .order("desc")
+      .collect();
+
+    return assignee ? results.filter((i) => i.assignee === assignee) : results;
   },
 });
 

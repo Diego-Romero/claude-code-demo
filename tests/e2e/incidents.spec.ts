@@ -17,7 +17,11 @@ test.describe("All Incidents", () => {
   });
 
   test("resolved incidents do not show a Resolve button", async ({ page }) => {
-    const resolvedRow = page.locator("tbody tr").filter({ hasText: "resolved" }).first();
+    // Filter by exact status cell text to avoid matching active incidents
+    // whose descriptions happen to contain the word "resolved"
+    const resolvedRow = page.locator("tbody tr").filter({
+      has: page.getByRole("cell", { name: "resolved", exact: true }),
+    }).first();
     await expect(resolvedRow).toBeVisible();
     await expect(resolvedRow.getByRole("button", { name: "Resolve" })).not.toBeVisible();
   });
