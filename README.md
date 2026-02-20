@@ -11,6 +11,53 @@ A real-time incident tracker built as the live demo vehicle for a **Claude Code:
 | **Moodboard 1** — Midnight Ops | [.../moodboard-1.html](https://diego-claude-code-demo.vercel.app/moodboard-1.html) |
 | **Moodboard 2** — Hazmat | [.../moodboard-2.html](https://diego-claude-code-demo.vercel.app/moodboard-2.html) |
 | **Moodboard 3** — Clean Room | [.../moodboard-3.html](https://diego-claude-code-demo.vercel.app/moodboard-3.html) |
+| **Codebase Concept Map** | [.../codebase-concept-map.html](https://diego-claude-code-demo.vercel.app/codebase-concept-map.html) |
+
+## Design moodboards
+
+Three static HTML moodboards exploring different visual directions for the Incident Tracker UI. Each is a fully self-contained page showing the same dashboard content — same data, same components — styled in a completely different design language.
+
+| Moodboard | Theme | Vibe |
+|---|---|---|
+| [Midnight Ops](https://diego-claude-code-demo.vercel.app/moodboard-1.html) | Dark, violet accents, Plus Jakarta Sans | Polished ops tooling — Vercel/Linear aesthetic |
+| [Hazmat](https://diego-claude-code-demo.vercel.app/moodboard-2.html) | Black + orange, Space Mono, industrial striping | High-contrast emergency aesthetic |
+| [Clean Room](https://diego-claude-code-demo.vercel.app/moodboard-3.html) | White, blue accents, DM Sans | Government/enterprise — calm and structured |
+
+**How they were generated:**
+
+Each moodboard was created by Claude Code using the `/frontend-design` skill, which generates distinctive, production-grade frontend interfaces with a strong design point of view. The prompt gave Claude the component requirements (incident cards, severity badges, dashboard layout) and let it choose the visual language for each direction:
+
+```
+/frontend-design
+# Claude designed 3 distinct moodboard variants as single-file HTML
+# — no frameworks, no build step, fully self-contained
+```
+
+The files live in `public/` and are served as static assets by Next.js, so they're accessible at `/moodboard-N.html` on any deployment.
+
+## Codebase concept map
+
+`public/codebase-concept-map.html` is an interactive learning tool pre-populated with the Incident Tracker's architecture — 18 nodes across the Frontend, Backend, Auth, and Testing layers, with pre-drawn edges showing real relationships between them.
+
+**How to use it:**
+
+1. Open [`/codebase-concept-map.html`](https://diego-claude-code-demo.vercel.app/codebase-concept-map.html) in a browser
+2. Click any node label in the sidebar to cycle its knowledge level: **Fuzzy → Know → Unknown**
+3. Click a node on the canvas, then click another to draw a relationship edge
+4. Select a connection type (calls, depends on, subscribes to, …) before drawing
+5. Right-click an edge label to delete it — **Auto-layout** runs a force-directed simulation
+6. Try a **persona preset** (Frontend dev, Backend dev, Newcomer) to pre-fill knowledge levels
+7. The **Learning Prompt** panel updates live — copy it into Claude for a targeted explanation
+
+**How it was generated:**
+
+The file was created by Claude Code using the `/playground` skill with the `concept-map` template. Nodes and edges were pre-populated from the CLAUDE.md project context — no manual data entry required. The full interaction was:
+
+```
+/playground
+# selected: Concept Map
+# Claude read CLAUDE.md, extracted the architecture, and generated the single-file HTML
+```
 
 ## Presentation
 
@@ -140,7 +187,11 @@ tests/
   e2e/              # Playwright
 presentation.md     # Marp slide deck (source)
 public/
-  presentation.html # Generated from presentation.md at build time
+  presentation.html           # Generated from presentation.md at build time
+  moodboard-1.html            # Design direction: Midnight Ops (dark, violet)
+  moodboard-2.html            # Design direction: Hazmat (black, orange, industrial)
+  moodboard-3.html            # Design direction: Clean Room (white, blue, enterprise)
+  codebase-concept-map.html   # Interactive architecture learning tool
 ```
 
 ## CI

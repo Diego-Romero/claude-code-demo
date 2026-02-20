@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incident Tracker — Code Map</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .layout { display: flex; flex: 1; overflow: hidden; }
+
+    /* ─── Sidebar ─────────────────────────────────────── */
+    .sidebar {
+      width: 240px; min-width: 240px;
+      background: #141414;
+      border-right: 1px solid #252525;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .sidebar-header { padding: 14px 16px; border-bottom: 1px solid #252525; }
+    .sidebar-title { font-size: 13px; font-weight: 700; color: #fff; }
+    .sidebar-subtitle { font-size: 10px; color: #555; margin-top: 2px; }
+    .sidebar-section { padding: 10px 14px; border-bottom: 1px solid #252525; }
+    .section-label {
+      font-size: 10px; font-weight: 600; color: #555;
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 7px;
+    }
+
+    /* Presets */
+    .presets { display: flex; flex-direction: column; gap: 3px; }
+    .preset-btn {
+      background: #1e1e1e; border: 1px solid #2a2a2a; color: #aaa;
+      padding: 5px 10px; border-radius: 5px; font-size: 11px;
+      cursor: pointer; text-align: left; transition: all .12s;
+    }
+    .preset-btn:hover { background: #282828; color: #ddd; }
+    .preset-btn.active { background: #1a3560; border-color: #3b82f6; color: #93c5fd; }
+
+    /* Toggle rows */
+    .toggle-row {
+      display: flex; align-items: center; gap: 7px;
+      padding: 4px 0; cursor: pointer; font-size: 11px; color: #999;
+      user-select: none;
+    }
+    .toggle-row:hover { color: #ddd; }
+    .chk {
+      width: 14px; height: 14px; border-radius: 3px;
+      border: 1px solid #3a3a3a; background: #1e1e1e;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 9px; color: transparent;
+    }
+    .toggle-row.on .chk { background: #2563eb; border-color: #3b82f6; color: #fff; }
+    .swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .conn-dash { flex-shrink: 0; }
+
+    /* Comments */
+    .comments-list { flex: 1; overflow-y: auto; padding: 10px 14px; }
+    .no-comments-msg { font-size: 11px; color: #3a3a3a; font-style: italic; padding: 10px 0; }
+    .comment-item {
+      background: #1a1a1a; border: 1px solid #2a2a2a;
+      border-radius: 6px; padding: 7px; margin-bottom: 6px;
+    }
+    .comment-target { font-size: 10px; font-weight: 600; color: #f59e0b; margin-bottom: 3px; }
+    .comment-text { font-size: 11px; color: #bbb; line-height: 1.4; }
+    .comment-del {
+      float: right; background: none; border: none; color: #444;
+      cursor: pointer; font-size: 11px; padding: 0; margin-left: 4px;
+    }
+    .comment-del:hover { color: #ef4444; }
+
+    /* ─── Canvas ──────────────────────────────────────── */
+    .canvas-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .canvas-bar {
+      background: #141414; border-bottom: 1px solid #252525;
+      padding: 7px 14px; display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .canvas-bar-title { font-size: 12px; font-weight: 600; color: #ddd; flex: 1; }
+    .zoom-btn {
+      background: #1e1e1e; border: 1px solid #2a2a2a; color: #aaa;
+      width: 26px; height: 26px; border-radius: 5px; cursor: pointer;
+      font-size: 13px; display: flex; align-items: center; justify-content: center;
+    }
+    .zoom-btn:hover { background: #282828; color: #fff; }
+    .zoom-val { font-size: 11px; color: #555; min-width: 36px; text-align: center; }
+
+    #canvas-wrap {
+      flex: 1; overflow: hidden; position: relative;
+      background: #0d0d0d; cursor: grab;
+    }
+    #canvas-wrap.panning { cursor: grabbing; }
+    #canvas-svg { position: absolute; top: 0; left: 0; }
+
+    /* Grid pattern */
+    #grid-pattern { pointer-events: none; }
+
+    /* ─── Prompt ──────────────────────────────────────── */
+    .prompt-bar {
+      background: #141414; border-top: 1px solid #252525;
+      padding: 10px 14px; max-height: 150px;
+      display: flex; flex-direction: column; flex-shrink: 0;
+    }
+    .prompt-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .prompt-lbl { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: .06em; }
+    .copy-btn {
+      background: #1e1e1e; border: 1px solid #2a2a2a; color: #aaa;
+      padding: 3px 9px; border-radius: 5px; font-size: 10px; cursor: pointer;
+    }
+    .copy-btn:hover { background: #282828; color: #ddd; }
+    .copy-btn.ok { border-color: #22c55e; color: #22c55e; }
+    .prompt-text {
+      font-family: 'SF Mono', Menlo, monospace; font-size: 10px;
+      color: #888; line-height: 1.55; overflow-y: auto; white-space: pre-wrap; flex: 1;
+    }
+
+    /* ─── Modal ───────────────────────────────────────── */
+    .overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.75); z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    .overlay.show { display: flex; }
+    .modal {
+      background: #1a1a1a; border: 1px solid #333; border-radius: 10px;
+      padding: 20px; width: 400px; max-width: 92vw;
+    }
+    .modal-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .modal-path { font-size: 10px; color: #555; font-family: monospace; margin-bottom: 12px; }
+    .modal textarea {
+      width: 100%; background: #222; border: 1px solid #333;
+      border-radius: 6px; color: #ddd; font-size: 11px;
+      padding: 8px; height: 90px; resize: none; outline: none;
+      font-family: system-ui, sans-serif; line-height: 1.5;
+    }
+    .modal textarea:focus { border-color: #3b82f6; }
+    .modal-btns { display: flex; gap: 7px; justify-content: flex-end; margin-top: 10px; }
+    .btn-cancel {
+      background: #222; border: 1px solid #333; color: #aaa;
+      padding: 5px 13px; border-radius: 5px; cursor: pointer; font-size: 11px;
+    }
+    .btn-save {
+      background: #1a3560; border: 1px solid #3b82f6; color: #93c5fd;
+      padding: 5px 13px; border-radius: 5px; cursor: pointer; font-size: 11px;
+    }
+    .btn-save:hover { background: #1e4080; }
+    .btn-cancel:hover { background: #2a2a2a; }
+
+    /* ─── Tooltip ─────────────────────────────────────── */
+    #tip {
+      position: fixed; background: #1a1a1a; border: 1px solid #333;
+      border-radius: 7px; padding: 9px 11px; font-size: 11px; color: #bbb;
+      pointer-events: none; z-index: 100; max-width: 240px;
+      line-height: 1.5; display: none; box-shadow: 0 4px 20px rgba(0,0,0,.5);
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- ─── Sidebar ─────────────────────────────────────── -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Incident Tracker</div>
+      <div class="sidebar-subtitle">Architecture Code Map</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">View Preset</div>
+      <div class="presets" id="presets"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Layers</div>
+      <div id="layer-toggles"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Connections</div>
+      <div id="conn-toggles"></div>
+    </div>
+
+    <div class="sidebar-section" style="border-bottom:none;padding-bottom:4px">
+      <div class="section-label">Notes (<span id="note-count">0</span>)</div>
+      <div class="no-comments-msg" id="no-notes">Click any node to annotate.</div>
+    </div>
+    <div class="comments-list" id="notes-list"></div>
+  </div>
+
+  <!-- ─── Canvas ──────────────────────────────────────── -->
+  <div class="canvas-wrapper">
+    <div class="canvas-bar">
+      <span class="canvas-bar-title" id="view-label">Full System</span>
+      <button class="zoom-btn" onclick="doZoom(-0.1)">−</button>
+      <span class="zoom-val" id="zoom-val">100%</span>
+      <button class="zoom-btn" onclick="doZoom(0.1)">+</button>
+      <button class="zoom-btn" onclick="resetView()" title="Reset">⊙</button>
+    </div>
+
+    <div id="canvas-wrap">
+      <svg id="canvas-svg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
+          </pattern>
+          <g id="markers"></g>
+        </defs>
+        <rect id="grid-bg" fill="url(#grid)"/>
+        <g id="diagram"></g>
+      </svg>
+    </div>
+
+    <div class="prompt-bar">
+      <div class="prompt-head">
+        <span class="prompt-lbl">Generated Prompt</span>
+        <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">Copy</button>
+      </div>
+      <div class="prompt-text" id="prompt-out"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-title" id="m-title"></div>
+    <div class="modal-path" id="m-path"></div>
+    <textarea id="m-text" placeholder="Add a note, question, or implementation idea about this component…"></textarea>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveNote()">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tooltip -->
+<div id="tip"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// ARCHITECTURE DATA
+// ═══════════════════════════════════════════════════════════
+
+const LAYERS = {
+  client:  { label: 'Client Components',  fill: '#0f1f3d', stroke: '#3b82f6', text: '#93c5fd' },
+  server:  { label: 'Server Components',  fill: '#2a1a00', stroke: '#f59e0b', text: '#fcd34d' },
+  auth:    { label: 'Auth & Middleware',  fill: '#1e0a3a', stroke: '#a855f7', text: '#d8b4fe' },
+  backend: { label: 'Convex Backend',     fill: '#062016', stroke: '#22c55e', text: '#86efac' },
+  db:      { label: 'Database',           fill: '#2a0018', stroke: '#ec4899', text: '#f9a8d4' },
+  util:    { label: 'Utilities',          fill: '#111827', stroke: '#6b7280', text: '#9ca3af' },
+};
+
+const CTYPES = {
+  dependency: { label: 'Import / Dependency', color: '#444',    dash: '3 3', w: 1   },
+  dataflow:   { label: 'Data Flow (Convex)',   color: '#3b82f6', dash: '0',   w: 2   },
+  auth:       { label: 'Auth Check',           color: '#a855f7', dash: '6 3', w: 1.5 },
+  realtime:   { label: 'Real-time WebSocket',  color: '#f59e0b', dash: '8 3', w: 1.5 },
+  protect:    { label: 'Route Guard',          color: '#ef4444', dash: '4 2', w: 1   },
+};
+
+// nodes: id, label, subtitle, x, y, w, h, layer, tip
+const NODES = [
+  // ── Client Components (row y=50) ──────────────────────
+  {
+    id:'splash-page', label:'(splash) page', subtitle:'app/(splash)/page.tsx',
+    x:55,  y:50, w:145, h:50, layer:'client',
+    tip:'Public landing page. No auth required. Links to /signin and /dashboard.'
+  },
+  {
+    id:'signin-page', label:'Sign In page', subtitle:'app/signin/page.tsx',
+    x:240, y:50, w:140, h:50, layer:'client',
+    tip:'Email + password form. Calls signIn("credentials") from next-auth/react on submit.'
+  },
+  {
+    id:'dashboard-page', label:'Dashboard Page', subtitle:'app/dashboard/page.tsx',
+    x:425, y:50, w:145, h:50, layer:'client',
+    tip:'Active incidents. CRUD via useQuery(list,{status:"active"}) + useMutation(create/resolve/remove).'
+  },
+  {
+    id:'incidents-page', label:'Incidents Page', subtitle:'app/incidents/page.tsx',
+    x:615, y:50, w:145, h:50, layer:'client',
+    tip:'All incidents table (active + resolved). useQuery(list,{}) — no status filter.'
+  },
+  {
+    id:'sidebar', label:'Sidebar', subtitle:'components/Sidebar.tsx',
+    x:810, y:50, w:120, h:50, layer:'client',
+    tip:'Nav links + sign out. Highlights active link with usePathname(). Calls signOut() from next-auth/react.'
+  },
+  {
+    id:'convex-provider', label:'ConvexClientProvider', subtitle:'components/ConvexClientProvider.tsx',
+    x:980, y:50, w:175, h:50, layer:'client',
+    tip:'Initializes ConvexReactClient(NEXT_PUBLIC_CONVEX_URL). Wraps app with both ConvexProvider and NextAuth SessionProvider.'
+  },
+
+  // ── Server Components (row y=165) ─────────────────────
+  {
+    id:'root-layout', label:'Root Layout', subtitle:'app/layout.tsx',
+    x:55,  y:165, w:125, h:50, layer:'server',
+    tip:'Root Next.js layout. Wraps the entire app tree with ConvexClientProvider (which provides Convex + NextAuth context).'
+  },
+  {
+    id:'splash-layout', label:'(splash) Layout', subtitle:'app/(splash)/layout.tsx',
+    x:225, y:165, w:140, h:50, layer:'server',
+    tip:'Passthrough layout for the public landing page. No auth check, no Sidebar — just renders children.'
+  },
+  {
+    id:'dash-layout', label:'Dashboard Layout', subtitle:'app/dashboard/layout.tsx',
+    x:410, y:165, w:150, h:50, layer:'server',
+    tip:'Calls await auth(). Redirects to /signin if no session. Renders <Sidebar> + {children}.'
+  },
+  {
+    id:'inc-layout', label:'Incidents Layout', subtitle:'app/incidents/layout.tsx',
+    x:605, y:165, w:150, h:50, layer:'server',
+    tip:'Identical auth pattern to Dashboard Layout. Calls await auth(), renders Sidebar + children.'
+  },
+  {
+    id:'auth-route', label:'Auth Route Handler', subtitle:'app/api/auth/[...nextauth]/route.ts',
+    x:805, y:165, w:175, h:50, layer:'server',
+    tip:'Next.js route handler for NextAuth. Handles POST /api/auth/signin, GET /api/auth/session, signout, callbacks.'
+  },
+
+  // ── Auth & Middleware (row y=278) ─────────────────────
+  {
+    id:'middleware', label:'middleware.ts', subtitle:'middleware.ts',
+    x:155, y:278, w:140, h:50, layer:'auth',
+    tip:'Edge middleware. Protects /dashboard + /incidents — redirects to /signin if no JWT. Redirects /signin → /dashboard if already logged in.'
+  },
+  {
+    id:'auth-config', label:'auth.ts', subtitle:'auth.ts (NextAuth config)',
+    x:500, y:278, w:150, h:50, layer:'auth',
+    tip:'NextAuth v5 config. Credentials provider: validates DEMO_EMAIL/DEMO_PASSWORD env vars. JWT session strategy (no DB sessions).'
+  },
+
+  // ── Convex Backend (row y=390) ────────────────────────
+  {
+    id:'incidents-fn', label:'incidents.ts', subtitle:'convex/incidents.ts',
+    x:110, y:390, w:150, h:50, layer:'backend',
+    tip:'Convex functions: list (query, uses by_status index), create, resolve, update, remove (mutations). All mutations call ctx.auth.getUserIdentity().'
+  },
+  {
+    id:'schema', label:'schema.ts', subtitle:'convex/schema.ts',
+    x:310, y:390, w:130, h:50, layer:'backend',
+    tip:'DB schema. incidents: severity P0-P3, status active|resolved, assignee?, resolvedAt?. Index: by_status. Also defines users table with by_email index.'
+  },
+  {
+    id:'seed-fn', label:'seed.ts', subtitle:'convex/seed.ts',
+    x:490, y:390, w:120, h:50, layer:'backend',
+    tip:'One-time seed mutation. Inserts 4 active + 2 resolved sample incidents. Skips if data already exists (idempotent).'
+  },
+  {
+    id:'utils', label:'lib/utils.ts', subtitle:'lib/utils.ts',
+    x:665, y:390, w:135, h:50, layer:'util',
+    tip:'cn() for Tailwind class merging. formatDistanceToNow() for relative timestamps. Covered by 5 Vitest unit tests with fake timers.'
+  },
+
+  // ── Database (row y=495) ──────────────────────────────
+  {
+    id:'incidents-table', label:'incidents', subtitle:'Convex DB · by_status index',
+    x:175, y:495, w:160, h:50, layer:'db',
+    tip:'Convex document DB table. Fields: title, description, severity(P0-P3), status(active|resolved), assignee?, resolvedAt?, _id, _creationTime.'
+  },
+  {
+    id:'users-table', label:'users', subtitle:'Convex DB · by_email index',
+    x:390, y:495, w:145, h:50, layer:'db',
+    tip:'Users table with email, name?, image?. Indexed by email. Not used directly in the current UI — reserved for future multi-user auth.'
+  },
+];
+
+const EDGES = [
+  // Root layout → ConvexClientProvider
+  { f:'root-layout',     t:'convex-provider',  type:'dependency', lbl:'wraps' },
+  // Layouts render pages
+  { f:'dash-layout',     t:'dashboard-page',   type:'dependency', lbl:'renders' },
+  { f:'inc-layout',      t:'incidents-page',   type:'dependency', lbl:'renders' },
+  { f:'splash-layout',   t:'splash-page',      type:'dependency', lbl:'renders' },
+  // Layouts render Sidebar
+  { f:'dash-layout',     t:'sidebar',          type:'dependency' },
+  { f:'inc-layout',      t:'sidebar',          type:'dependency' },
+  // Auth checks in layouts
+  { f:'dash-layout',     t:'auth-config',      type:'auth',       lbl:'await auth()' },
+  { f:'inc-layout',      t:'auth-config',      type:'auth',       lbl:'await auth()' },
+  // Middleware wraps auth
+  { f:'middleware',      t:'auth-config',      type:'auth',       lbl:'wraps' },
+  // Middleware guards routes
+  { f:'middleware',      t:'dash-layout',      type:'protect',    lbl:'guards' },
+  { f:'middleware',      t:'inc-layout',       type:'protect',    lbl:'guards' },
+  // Auth route handler
+  { f:'auth-route',      t:'auth-config',      type:'auth',       lbl:'handlers' },
+  // Signin & Sidebar use auth
+  { f:'signin-page',     t:'auth-config',      type:'auth',       lbl:'signIn()' },
+  { f:'sidebar',         t:'auth-config',      type:'auth',       lbl:'signOut()' },
+  // ConvexClientProvider provides context to pages
+  { f:'convex-provider', t:'dashboard-page',   type:'dataflow',   lbl:'provides' },
+  { f:'convex-provider', t:'incidents-page',   type:'dataflow',   lbl:'provides' },
+  // Pages call Convex
+  { f:'dashboard-page',  t:'incidents-fn',     type:'dataflow',   lbl:'useQuery / useMutation' },
+  { f:'incidents-page',  t:'incidents-fn',     type:'dataflow',   lbl:'useQuery / useMutation' },
+  // Pages use utils
+  { f:'dashboard-page',  t:'utils',            type:'dependency', lbl:'formatDistance' },
+  { f:'incidents-page',  t:'utils',            type:'dependency', lbl:'formatDistance' },
+  // Backend uses schema
+  { f:'incidents-fn',    t:'schema',           type:'dependency', lbl:'types' },
+  { f:'seed-fn',         t:'schema',           type:'dependency', lbl:'types' },
+  // Backend → DB
+  { f:'incidents-fn',    t:'incidents-table',  type:'dataflow',   lbl:'CRUD' },
+  { f:'seed-fn',         t:'incidents-table',  type:'dataflow',   lbl:'insert' },
+  { f:'schema',          t:'incidents-table',  type:'dependency', lbl:'defines' },
+  { f:'schema',          t:'users-table',      type:'dependency', lbl:'defines' },
+  // Real-time WS push from DB back to UI
+  { f:'incidents-table', t:'dashboard-page',   type:'realtime',   lbl:'WS push' },
+  { f:'incidents-table', t:'incidents-page',   type:'realtime',   lbl:'WS push' },
+];
+
+const PRESETS = {
+  full:     { label:'Full System',    layers:{ client:1, server:1, auth:1, backend:1, db:1, util:1 }, conns:{ dependency:1, dataflow:1, auth:1, realtime:1, protect:1 } },
+  frontend: { label:'Frontend Only',  layers:{ client:1, server:1, auth:0, backend:0, db:0, util:0 }, conns:{ dependency:1, dataflow:0, auth:0, realtime:0, protect:0 } },
+  auth:     { label:'Auth Flow',      layers:{ client:1, server:1, auth:1, backend:0, db:0, util:0 }, conns:{ dependency:0, dataflow:0, auth:1, realtime:0, protect:1 } },
+  data:     { label:'Data Flow',      layers:{ client:1, server:0, auth:0, backend:1, db:1, util:0 }, conns:{ dependency:0, dataflow:1, auth:0, realtime:1, protect:0 } },
+};
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+
+const S = {
+  layers: { client:1, server:1, auth:1, backend:1, db:1, util:1 },
+  conns:  { dependency:1, dataflow:1, auth:1, realtime:1, protect:1 },
+  notes: [],
+  zoom: 0.88,
+  px: 20, py: 20,
+  preset: 'full',
+  modalNode: null,
+};
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+
+function init() {
+  buildPresets();
+  buildMarkers();
+  renderControls();
+  renderAll();
+  initPan();
+}
+
+function buildPresets() {
+  const el = document.getElementById('presets');
+  el.innerHTML = Object.entries(PRESETS).map(([k,p]) =>
+    `<button class="preset-btn${k===S.preset?' active':''}" onclick="applyPreset('${k}')">${p.label}</button>`
+  ).join('');
+}
+
+function buildMarkers() {
+  const g = document.getElementById('markers');
+  g.innerHTML = Object.entries(CTYPES).map(([id,ct]) =>
+    `<marker id="arr-${id}" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="${ct.color}"/>
+    </marker>`
+  ).join('');
+}
+
+function renderControls() {
+  // Layers
+  document.getElementById('layer-toggles').innerHTML =
+    Object.entries(LAYERS).map(([id,l]) =>
+      `<div class="toggle-row${S.layers[id]?' on':''}" onclick="toggleLayer('${id}')">
+        <div class="chk">${S.layers[id]?'✓':''}</div>
+        <div class="swatch" style="background:${l.stroke}"></div>
+        <span>${l.label}</span>
+      </div>`
+    ).join('');
+
+  // Connections
+  document.getElementById('conn-toggles').innerHTML =
+    Object.entries(CTYPES).map(([id,ct]) =>
+      `<div class="toggle-row${S.conns[id]?' on':''}" style="opacity:${S.conns[id]?1:.35}" onclick="toggleConn('${id}')">
+        <div class="chk">${S.conns[id]?'✓':''}</div>
+        <svg class="conn-dash" width="22" height="8">
+          <line x1="0" y1="4" x2="22" y2="4" stroke="${ct.color}" stroke-width="${ct.w}" stroke-dasharray="${ct.dash}"/>
+        </svg>
+        <span>${ct.label}</span>
+      </div>`
+    ).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════
+
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs={}, text='') {
+  const e = document.createElementNS(NS, tag);
+  Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+  if (text) e.textContent = text;
+  return e;
+}
+
+function renderAll() {
+  const wrap = document.getElementById('canvas-wrap');
+  const svg = document.getElementById('canvas-svg');
+  const W = wrap.clientWidth || 1200;
+  const H = wrap.clientHeight || 600;
+  svg.setAttribute('width', W);
+  svg.setAttribute('height', H);
+  document.getElementById('grid-bg').setAttribute('width', W);
+  document.getElementById('grid-bg').setAttribute('height', H);
+
+  const g = document.getElementById('diagram');
+  g.innerHTML = '';
+  g.setAttribute('transform', `translate(${S.px},${S.py}) scale(${S.zoom})`);
+
+  const vis = NODES.filter(n => S.layers[n.layer]);
+  const visIds = new Set(vis.map(n => n.id));
+
+  drawBands(g, vis);
+
+  // Connections (drawn under nodes)
+  EDGES.forEach(e => {
+    if (!S.conns[e.type]) return;
+    const fn = NODES.find(n => n.id === e.f);
+    const tn = NODES.find(n => n.id === e.t);
+    if (!fn || !tn || !visIds.has(e.f) || !visIds.has(e.t)) return;
+    drawEdge(g, fn, tn, e);
+  });
+
+  vis.forEach(n => drawNode(g, n));
+
+  document.getElementById('zoom-val').textContent = Math.round(S.zoom*100) + '%';
+  updatePrompt();
+}
+
+function drawBands(g, vis) {
+  const bounds = {};
+  vis.forEach(n => {
+    if (!bounds[n.layer]) bounds[n.layer] = { x0:9999, x1:-9999, y0:9999, y1:-9999 };
+    const b = bounds[n.layer];
+    b.x0 = Math.min(b.x0, n.x - 8);
+    b.x1 = Math.max(b.x1, n.x + n.w + 8);
+    b.y0 = Math.min(b.y0, n.y - 22);
+    b.y1 = Math.max(b.y1, n.y + n.h + 8);
+  });
+
+  Object.entries(bounds).forEach(([lid, b]) => {
+    const l = LAYERS[lid];
+    g.appendChild(el('rect', {
+      x:b.x0-6, y:b.y0-2, width:b.x1-b.x0+12, height:b.y1-b.y0+10,
+      rx:10, fill:l.fill, stroke:l.stroke,
+      'stroke-width':1, 'stroke-opacity':'0.35', opacity:'0.6',
+    }));
+    g.appendChild(el('text', {
+      x:b.x0-2, y:b.y0+10, 'font-size':9, fill:l.stroke,
+      'font-family':'system-ui,sans-serif', 'font-weight':700,
+      opacity:'0.6', 'letter-spacing':'0.04em',
+    }, l.label.toUpperCase()));
+  });
+}
+
+function nodeEdge(node, tx, ty) {
+  const cx = node.x + node.w/2, cy = node.y + node.h/2;
+  const dx = tx - cx, dy = ty - cy;
+  const hw = node.w/2, hh = node.h/2;
+  const ex = Math.abs(dx)<.001 ? Infinity : hw/Math.abs(dx);
+  const ey = Math.abs(dy)<.001 ? Infinity : hh/Math.abs(dy);
+  const t = Math.min(ex, ey);
+  return { x: cx + dx*t, y: cy + dy*t };
+}
+
+function drawEdge(g, fn, tn, edge) {
+  const ct = CTYPES[edge.type];
+  const fc = { x: fn.x+fn.w/2, y: fn.y+fn.h/2 };
+  const tc = { x: tn.x+tn.w/2, y: tn.y+tn.h/2 };
+  const p1 = nodeEdge(fn, tc.x, tc.y);
+  const p2 = nodeEdge(tn, fc.x, fc.y);
+  const dx = p2.x-p1.x, dy = p2.y-p1.y;
+  const vert = Math.abs(dy) > Math.abs(dx);
+  const c1x = vert ? p1.x          : p1.x + dx*.4;
+  const c1y = vert ? p1.y + dy*.4  : p1.y;
+  const c2x = vert ? p2.x          : p2.x - dx*.4;
+  const c2y = vert ? p2.y - dy*.4  : p2.y;
+
+  g.appendChild(el('path', {
+    d:`M${p1.x} ${p1.y} C${c1x} ${c1y},${c2x} ${c2y},${p2.x} ${p2.y}`,
+    stroke:ct.color, 'stroke-width':ct.w, 'stroke-dasharray':ct.dash,
+    fill:'none', opacity:'0.65', 'marker-end':`url(#arr-${edge.type})`,
+  }));
+
+  if (edge.lbl) {
+    const mx = (p1.x+p2.x)/2, my = (p1.y+p2.y)/2;
+    const lw = edge.lbl.length * 4.5 + 6;
+    g.appendChild(el('rect', { x:mx-lw/2, y:my-7, width:lw, height:13, fill:'#0d0d0d', opacity:'.8', rx:3 }));
+    g.appendChild(el('text', {
+      x:mx, y:my+4, 'text-anchor':'middle', 'font-size':8,
+      fill:ct.color, 'font-family':'system-ui,sans-serif', opacity:'0.9',
+    }, edge.lbl));
+  }
+}
+
+function drawNode(g, node) {
+  const layer = LAYERS[node.layer];
+  const note = S.notes.find(n => n.target === node.id);
+  const grp = el('g', { cursor:'pointer', 'data-nid':node.id });
+
+  // Shadow / glow
+  grp.appendChild(el('rect', {
+    x:node.x+2, y:node.y+3, width:node.w, height:node.h, rx:8,
+    fill:note ? '#7c3aed' : layer.stroke, opacity:'.15',
+  }));
+
+  // Main rect
+  grp.appendChild(el('rect', {
+    x:node.x, y:node.y, width:node.w, height:node.h, rx:8,
+    fill:note ? '#2d1255' : layer.fill,
+    stroke:note ? '#a78bfa' : layer.stroke,
+    'stroke-width':note ? 2 : 1.5,
+  }));
+
+  // Title
+  grp.appendChild(el('text', {
+    x:node.x+node.w/2, y:node.y+18, 'text-anchor':'middle',
+    'font-size':11, 'font-weight':600, fill:note?'#d8b4fe':layer.text,
+    'font-family':'system-ui,sans-serif',
+  }, node.label));
+
+  // Subtitle (file path, truncated)
+  const maxC = Math.floor(node.w / 5.5);
+  const sub = node.subtitle.length > maxC ? '…'+node.subtitle.slice(-(maxC-1)) : node.subtitle;
+  grp.appendChild(el('text', {
+    x:node.x+node.w/2, y:node.y+32, 'text-anchor':'middle',
+    'font-size':8, fill:note?'#c4b5fd':layer.text, opacity:'.6',
+    'font-family':"'SF Mono',Menlo,monospace",
+  }, sub));
+
+  // Note indicator dot
+  if (note) {
+    grp.appendChild(el('circle', { cx:node.x+node.w-7, cy:node.y+7, r:5, fill:'#f59e0b' }));
+    grp.appendChild(el('text', {
+      x:node.x+node.w-7, y:node.y+11, 'text-anchor':'middle',
+      'font-size':7, fill:'#000',
+    }, '✎'));
+  }
+
+  grp.addEventListener('click', ev => { ev.stopPropagation(); openModal(node); });
+  grp.addEventListener('mouseenter', ev => showTip(ev, node));
+  grp.addEventListener('mousemove', moveTip);
+  grp.addEventListener('mouseleave', hideTip);
+
+  g.appendChild(grp);
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════════════
+
+function toggleLayer(id) {
+  S.layers[id] = !S.layers[id];
+  S.preset = null;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  renderControls(); renderAll();
+}
+function toggleConn(id) {
+  S.conns[id] = !S.conns[id];
+  S.preset = null;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  renderControls(); renderAll();
+}
+
+function applyPreset(key) {
+  const p = PRESETS[key]; if (!p) return;
+  S.layers = {...p.layers}; S.conns = {...p.conns}; S.preset = key;
+  document.querySelectorAll('.preset-btn').forEach((b,i) =>
+    b.classList.toggle('active', Object.keys(PRESETS)[i] === key)
+  );
+  document.getElementById('view-label').textContent = p.label;
+  renderControls(); renderAll();
+}
+
+function doZoom(d) { S.zoom = Math.max(.3, Math.min(2, S.zoom+d)); renderAll(); }
+function resetView() { S.zoom = .88; S.px = 20; S.py = 20; renderAll(); }
+
+function initPan() {
+  const wrap = document.getElementById('canvas-wrap');
+  let drag=false, sx, sy, spx, spy;
+  wrap.addEventListener('mousedown', e => {
+    if (e.target.closest('[data-nid]')) return;
+    drag=true; sx=e.clientX; sy=e.clientY; spx=S.px; spy=S.py;
+    wrap.classList.add('panning');
+  });
+  document.addEventListener('mousemove', e => {
+    if (!drag) return;
+    S.px = spx+(e.clientX-sx); S.py = spy+(e.clientY-sy);
+    document.getElementById('diagram').setAttribute('transform',
+      `translate(${S.px},${S.py}) scale(${S.zoom})`);
+  });
+  document.addEventListener('mouseup', () => { drag=false; wrap.classList.remove('panning'); });
+  wrap.addEventListener('wheel', e => {
+    e.preventDefault();
+    S.zoom = Math.max(.3, Math.min(2, S.zoom + (e.deltaY>0?-.06:.06)));
+    renderAll();
+  }, { passive:false });
+}
+
+// ═══════════════════════════════════════════════════════════
+// TOOLTIP
+// ═══════════════════════════════════════════════════════════
+
+function showTip(ev, node) {
+  const t = document.getElementById('tip');
+  t.innerHTML = `<strong style="color:#fff">${node.label}</strong><br>
+    <span style="color:#555;font-family:monospace;font-size:9px">${node.subtitle}</span><br><br>
+    ${node.tip}`;
+  t.style.display = 'block';
+  moveTip(ev);
+}
+function moveTip(ev) {
+  const t = document.getElementById('tip');
+  t.style.left = (ev.clientX+14)+'px';
+  t.style.top  = (ev.clientY-8)+'px';
+}
+function hideTip() { document.getElementById('tip').style.display='none'; }
+
+// ═══════════════════════════════════════════════════════════
+// MODAL / NOTES
+// ═══════════════════════════════════════════════════════════
+
+function openModal(node) {
+  S.modalNode = node;
+  document.getElementById('m-title').textContent = node.label;
+  document.getElementById('m-path').textContent  = node.subtitle;
+  const existing = S.notes.find(n => n.target === node.id);
+  document.getElementById('m-text').value = existing ? existing.text : '';
+  document.getElementById('overlay').classList.add('show');
+  setTimeout(() => document.getElementById('m-text').focus(), 50);
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('show');
+  S.modalNode = null;
+}
+function saveNote() {
+  const text = document.getElementById('m-text').value.trim();
+  const node = S.modalNode; if (!node) return;
+  S.notes = S.notes.filter(n => n.target !== node.id);
+  if (text) S.notes.push({ id:Date.now(), target:node.id, label:node.label, file:node.subtitle, text });
+  closeModal(); renderNotes(); renderAll();
+}
+function deleteNote(id) {
+  S.notes = S.notes.filter(n => n.id !== id);
+  renderNotes(); renderAll();
+}
+function renderNotes() {
+  const list = document.getElementById('notes-list');
+  const msg  = document.getElementById('no-notes');
+  document.getElementById('note-count').textContent = S.notes.length;
+  if (!S.notes.length) { list.innerHTML=''; msg.style.display='block'; return; }
+  msg.style.display = 'none';
+  list.innerHTML = S.notes.map(n => `
+    <div class="comment-item">
+      <button class="comment-del" onclick="deleteNote(${n.id})">✕</button>
+      <div class="comment-target">${n.label}</div>
+      <div class="comment-text">${n.text}</div>
+    </div>`).join('');
+}
+
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) closeModal();
+});
+
+// ═══════════════════════════════════════════════════════════
+// PROMPT
+// ═══════════════════════════════════════════════════════════
+
+function updatePrompt() {
+  const allVis = Object.values(S.layers).every(Boolean);
+  const visLayers = Object.entries(S.layers).filter(([,v])=>v).map(([k])=>LAYERS[k].label).join(', ');
+  const layerCtx = allVis ? 'the full system' : `these layers: ${visLayers}`;
+  const visIds = new Set(NODES.filter(n => S.layers[n.layer]).map(n => n.id));
+
+  let text = `This is the Incident Tracker architecture, showing ${layerCtx}.\n`;
+  text += `Stack: Next.js 15 App Router · Convex cloud backend · NextAuth v5 · shadcn/ui + Tailwind.\n`;
+
+  const shownConns = Object.entries(S.conns).filter(([,v])=>v).map(([k])=>CTYPES[k].label);
+  if (shownConns.length < Object.keys(CTYPES).length) {
+    text += `Visible connections: ${shownConns.join(', ')}.\n`;
+  }
+
+  const relevantNotes = S.notes.filter(n => visIds.has(n.target));
+  if (relevantNotes.length) {
+    text += `\nFeedback on specific components:\n`;
+    relevantNotes.forEach(n => {
+      text += `\n**${n.label}** (${n.file}):\n${n.text}\n`;
+    });
+  } else {
+    text += `\nClick any component node to add notes — they'll appear here as a structured prompt.`;
+  }
+
+  document.getElementById('prompt-out').textContent = text;
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-out').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copied!'; btn.classList.add('ok');
+    setTimeout(() => { btn.textContent='Copy'; btn.classList.remove('ok'); }, 1500);
+  });
+}
+
+window.addEventListener('resize', renderAll);
+init();
+</script>
+</body>
+</html>
