@@ -8,7 +8,7 @@
     "dev:backend": "convex dev",
     "predev": "convex dev --until-success && node setup.mjs --once && convex dashboard",
     "build": "next build",
-    "slides": "marp presentation.md --output public/presentation.html --html",
+    "slides": "marp presentation.md --output public/presentation.html --html --allow-local-files && node -e \"const fs=require('fs'),p='public/presentation.html';fs.writeFileSync(p,fs.readFileSync(p,'utf8').replace(/public\\/screenshot-/g,'screenshot-'))\"",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",

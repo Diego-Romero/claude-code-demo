@@ -530,9 +530,16 @@ paste it in.
 
 ---
 
-### Playground — TBD
+### `/playground` — Codebase Concept Map
 
-*Coming soon — examples from the openpass-api repo*
+![bg right:62%](public/screenshot-concept-map.png)
+
+- 18 nodes across Frontend, Backend, Auth, Testing
+- Mark knowledge: **Fuzzy → Know → Unknown**
+- Persona presets (Frontend dev, Newcomer…)
+- Generates a targeted learning prompt for Claude
+
+[codebase-concept-map.html](https://diego-claude-code-demo.vercel.app/codebase-concept-map.html)
 
 ---
 
@@ -543,15 +550,39 @@ paste it in.
 
 ---
 
-### `/frontend-design` — Live Demo
+### `/frontend-design` — Midnight Ops
 
-The [`/frontend-design`](https://github.com/anthropics/claude-plugins-official) skill generates production-grade, visually distinct UI from a single design brief.
+![bg right:62%](public/screenshot-moodboard-1.png)
 
-- Bold aesthetic direction, not generic AI output
-- Self-contained HTML — ready to serve, share, or iterate on
-- Emotional framing gets better results than functional specs
+Deep indigo-black · violet authority · Plus Jakarta Sans
 
-> *Live demo*
+> Polished ops tooling — Vercel/Linear aesthetic
+
+[moodboard-1.html](https://diego-claude-code-demo.vercel.app/moodboard-1.html)
+
+---
+
+### `/frontend-design` — Hazmat
+
+![bg right:62%](public/screenshot-moodboard-2.png)
+
+True black · safety orange · Barlow Condensed 900
+
+> OSHA posters and hard hats — earned, not ironic
+
+[moodboard-2.html](https://diego-claude-code-demo.vercel.app/moodboard-2.html)
+
+---
+
+### `/frontend-design` — Clean Room
+
+![bg right:62%](public/screenshot-moodboard-3.png)
+
+Clinical white · single blue accent · DM Sans
+
+> Medical device precision — showing up in white is a choice
+
+[moodboard-3.html](https://diego-claude-code-demo.vercel.app/moodboard-3.html)
 
 ---
 

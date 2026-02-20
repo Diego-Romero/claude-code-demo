@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as comments from "../comments.js";
 import type * as http from "../http.js";
 import type * as incidents from "../incidents.js";
 import type * as seed from "../seed.js";
@@ -19,6 +20,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  comments: typeof comments;
   http: typeof http;
   incidents: typeof incidents;
   seed: typeof seed;
