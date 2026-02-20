@@ -11,10 +11,10 @@ import { formatDistanceToNow } from "@/lib/utils";
 const SEVERITIES = ["P0", "P1", "P2", "P3"] as const;
 
 const severityStyles: Record<string, string> = {
-  P0: "bg-blue-100 text-blue-700 border-blue-200",
+  P0: "bg-red-100 text-red-700 border-red-200",
   P1: "bg-orange-100 text-orange-700 border-orange-200",
   P2: "bg-yellow-100 text-yellow-700 border-yellow-200",
-  P3: "bg-red-100 text-red-700 border-red-200",
+  P3: "bg-blue-100 text-blue-700 border-blue-200",
 };
 
 export default function DashboardPage() {

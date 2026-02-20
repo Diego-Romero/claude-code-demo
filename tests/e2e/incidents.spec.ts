@@ -17,13 +17,19 @@ test.describe("All Incidents", () => {
   });
 
   test("resolved incidents do not show a Resolve button", async ({ page }) => {
-    const resolvedRow = page.locator("tbody tr").filter({ hasText: "resolved" }).first();
+    // Use has: + exact role match to target the status cell specifically — avoids
+    // false positives from incident titles/descriptions that contain "resolved".
+    const resolvedRow = page.locator("tbody tr").filter({
+      has: page.getByRole("cell", { name: "resolved", exact: true }),
+    }).first();
     await expect(resolvedRow).toBeVisible();
     await expect(resolvedRow.getByRole("button", { name: "Resolve" })).not.toBeVisible();
   });
 
   test("active incidents show a Resolve button", async ({ page }) => {
-    const activeRow = page.locator("tbody tr").filter({ hasText: "active" }).first();
+    const activeRow = page.locator("tbody tr").filter({
+      has: page.getByRole("cell", { name: "active", exact: true }),
+    }).first();
     await expect(activeRow.getByRole("button", { name: "Resolve" })).toBeVisible();
   });
 });

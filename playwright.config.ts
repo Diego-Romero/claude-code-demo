@@ -3,13 +3,15 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
 
+const BASE_URL = process.env.BASE_URL ?? "http://localhost:3000";
+
 export default defineConfig({
   testDir: "tests/e2e",
   fullyParallel: true,
   retries: 0,
   reporter: "html",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: BASE_URL,
     trace: "on-first-retry",
   },
   expect: {
@@ -33,7 +35,7 @@ export default defineConfig({
   // Start the dev server automatically when running tests
   webServer: {
     command: "npm run dev:frontend",
-    url: "http://localhost:3000",
+    url: BASE_URL,
     reuseExistingServer: true,
   },
 });

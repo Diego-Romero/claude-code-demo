@@ -32,7 +32,7 @@ test.describe("Dashboard", () => {
     const title = `Incident to resolve ${Date.now()}`;
     await page.getByRole("button", { name: "New incident" }).click();
     await page.getByLabel("Title").fill(title);
-    await page.getByLabel("Description").fill("Will be resolved by the test.");
+    await page.getByLabel("Description").fill("Playwright test incident — to be closed.");
     await page.getByRole("button", { name: "Create incident" }).click();
 
     const card = page.getByTestId("incident-card").filter({ hasText: title });
@@ -54,5 +54,36 @@ test.describe("Dashboard", () => {
     await card.getByRole("button", { name: "Delete" }).click();
 
     await expect(card).not.toBeVisible();
+  });
+
+  test("severity badges use correct colours: P0=red, P1=orange, P2=yellow, P3=blue", async ({ page }) => {
+    const ts = Date.now();
+    const titles = {
+      P0: `Severity colour P0 ${ts}`,
+      P1: `Severity colour P1 ${ts}`,
+      P2: `Severity colour P2 ${ts}`,
+      P3: `Severity colour P3 ${ts}`,
+    };
+
+    for (const [sev, title] of Object.entries(titles)) {
+      await page.getByRole("button", { name: "New incident" }).click();
+      await page.getByLabel("Title").fill(title);
+      await page.getByLabel("Description").fill("Regression test: severity colour mapping.");
+      await page.getByLabel("Severity").selectOption(sev);
+      await page.getByRole("button", { name: "Create incident" }).click();
+      await expect(page.getByTestId("incident-card").filter({ hasText: title })).toBeVisible();
+    }
+
+    const badgeFor = (sev: string) =>
+      page.getByTestId("incident-card").filter({ hasText: titles[sev as keyof typeof titles] }).locator("span").getByText(sev, { exact: true });
+
+    await expect(badgeFor("P0")).toHaveClass(/text-red-700/);
+    await expect(badgeFor("P1")).toHaveClass(/text-orange-700/);
+    await expect(badgeFor("P2")).toHaveClass(/text-yellow-700/);
+    await expect(badgeFor("P3")).toHaveClass(/text-blue-700/);
+
+    // Explicitly guard against the inverted-colour regression
+    await expect(badgeFor("P0")).not.toHaveClass(/text-blue-700/);
+    await expect(badgeFor("P3")).not.toHaveClass(/text-red-700/);
   });
 });
