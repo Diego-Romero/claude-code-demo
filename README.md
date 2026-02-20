@@ -20,11 +20,16 @@ The slide deck lives in [`presentation.md`](./presentation.md) (Marp format) and
 npm run build   # runs marp first, then next build
 ```
 
-The generated `public/presentation.html` is committed to the repo and deployed to Vercel — accessible at `/presentation.html` on the live site. To regenerate it locally after editing the slides:
+The generated `public/presentation.html` is committed to the repo and deployed to Vercel — accessible at `/presentation.html` on the live site.
+
+After editing the slides, regenerate and commit the HTML:
 
 ```bash
-npm run prebuild
+npm run prebuild   # regenerates public/presentation.html
+git add presentation.md public/presentation.html && git commit
 ```
+
+> Vercel skips the prebuild step (configured in `vercel.json`) to avoid the slow Puppeteer/Chromium download on every deploy. The committed HTML is used directly.
 
 ## The app
 
