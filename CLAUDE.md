@@ -177,6 +177,53 @@ Convex cloud is a **shared DB** across all test runs. There is no teardown. This
 
 ---
 
+## Standard Feature Workflow
+
+When implementing any non-trivial feature, always follow this sequence:
+
+1. **Clarify** — use `AskUserQuestion` to resolve ambiguities before writing code
+2. **Implement** — follow existing Convex + Next.js patterns in this codebase
+3. **Write tests** — unit tests for any new utility functions; Playwright E2E tests for any new user-visible behaviour
+4. **Run tests** — `npm run test` (unit) and `npm run test:e2e` (E2E) must pass
+5. **Self-verify end-to-end** — use MCP tools to confirm the feature works (see MCP Self-Verification below)
+6. **Code review** — run `/code-review:code-review` on the changes and fix any critical issues
+7. **Open a PR** — use `/commit-push-pr` or `gh pr create`
+
+Do not open a PR until steps 4–6 are complete.
+
+---
+
+## MCP Self-Verification
+
+After implementing a feature, use these MCP tools to verify everything works end-to-end before opening a PR:
+
+### Convex MCP — verify DB state
+Use `mcp__convex__*` tools to inspect the live database directly:
+- Query tables to confirm new data is being written correctly
+- Run mutations to test edge cases without touching the UI
+- Check that indexes are being used (run `mcp__convex__insights` to catch full-table scans)
+
+### Playwright MCP — drive the browser
+Use `mcp__plugin_playwright_*` tools to navigate the running app and assert UI behaviour:
+- `playwright__browser_navigate` to open pages
+- `playwright__browser_snapshot` to inspect the accessibility tree (preferred over screenshots for assertions)
+- `playwright__browser_click` / `playwright__browser_type` to interact with the UI
+
+### Claude in Chrome — visual verification
+Use `mcp__claude-in-chrome__*` tools for visual spot-checks and reading console errors:
+- `read_console_messages` to catch JS errors after interactions
+- `read_network_requests` to verify API calls are going to the right endpoints
+- `computer` with `screenshot` action for a final visual check
+
+### Self-verification checklist
+- [ ] New Convex table/mutation produces the expected documents (Convex MCP)
+- [ ] UI renders the new feature correctly and updates in real time (Playwright or Chrome MCP)
+- [ ] No JS errors in the browser console after interacting with the feature (Chrome MCP)
+- [ ] Unit tests pass: `npm run test`
+- [ ] E2E tests pass: `npm run test:e2e`
+
+---
+
 ## Code Review Guidelines
 
 When reviewing code in this project, focus on the following:
