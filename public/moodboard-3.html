@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moodboard 03 — Clean Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:    #F7F9FC;
+      --white:    #FFFFFF;
+      --border:   #E2E8F0;
+      --border-2: #C8D4E0;
+      --text-1:   #0F1923;
+      --text-2:   #4A5568;
+      --text-3:   #9BAAB8;
+      --blue:     #0060CC;
+      --blue-lt:  #EBF3FF;
+      --blue-mid: #C3DBFF;
+      --p0:       #DC2626;
+      --p0-lt:    #FEF2F2;
+      --p0-mid:   #FECACA;
+      --p1:       #D97706;
+      --p1-lt:    #FFFBEB;
+      --p1-mid:   #FDE68A;
+      --p2:       #2563EB;
+      --p2-lt:    #EFF6FF;
+      --p2-mid:   #BFDBFE;
+      --p3:       #059669;
+      --p3-lt:    #ECFDF5;
+      --p3-mid:   #A7F3D0;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--text-1);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 56px 64px;
+    }
+
+    .page { max-width: 1040px; margin: 0 auto; }
+
+    /* ── HEADER ─────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding-bottom: 28px;
+      margin-bottom: 44px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--blue-lt);
+      border: 1px solid var(--blue-mid);
+      border-radius: 999px;
+      padding: 3px 10px;
+      margin-bottom: 10px;
+    }
+
+    .header-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: breathe 2.5s ease-in-out infinite;
+    }
+
+    @keyframes breathe { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+    .header-badge-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: var(--blue);
+      text-transform: uppercase;
+    }
+
+    .header-title {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-1);
+    }
+
+    .header-desc {
+      font-size: 12px;
+      color: var(--text-2);
+      line-height: 1.7;
+      max-width: 300px;
+      text-align: right;
+    }
+
+    /* ── STATUS BAR ─────────────────────────── */
+    .status-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--white);
+      overflow: hidden;
+      margin-bottom: 48px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .stat {
+      padding: 14px 18px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .stat-val { font-size: 18px; font-weight: 700; color: var(--text-1); }
+    .stat-val.red    { color: var(--p0); }
+    .stat-val.amber  { color: var(--p1); }
+    .stat-val.blue   { color: var(--blue); }
+
+    /* ── SECTION LABEL ──────────────────────── */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* ── PALETTE ────────────────────────────── */
+    .palette-row {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 10px;
+      margin-bottom: 52px;
+    }
+
+    .swatch { display: flex; flex-direction: column; }
+    .sw-color { height: 36px; border-radius: 4px; margin-bottom: 5px; border: 1px solid var(--border); }
+    .sw-name  { font-size: 8px; font-weight: 500; color: var(--text-2); margin-bottom: 1px; }
+    .sw-hex   { font-family: 'DM Mono', monospace; font-size: 7px; color: var(--text-3); }
+
+    /* ── TYPOGRAPHY ─────────────────────────── */
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 52px;
+    }
+
+    .type-cell {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .type-role {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 12px;
+    }
+
+    .type-note {
+      font-family: 'DM Mono', monospace;
+      font-size: 7px;
+      color: var(--text-3);
+      letter-spacing: 0.08em;
+      margin-top: 10px;
+    }
+
+    /* ── INCIDENT CARD ──────────────────────── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--p0);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 52px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .card-head {
+      padding: 14px 20px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--p0-lt);
+    }
+
+    .card-head-id {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--p0);
+    }
+
+    .card-head-ts {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-3);
+    }
+
+    .card-body { padding: 20px; }
+
+    .sev-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    /* Medical-style vitals badge */
+    .vitals-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+    }
+
+    .vitals-badge.p0 {
+      background: var(--p0-lt);
+      color: var(--p0);
+      border: 1px solid var(--p0-mid);
+    }
+
+    .vitals-badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: breathe 1.2s ease-in-out infinite;
+    }
+
+    .card-tag {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-3);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: var(--text-1);
+      margin-bottom: 16px;
+    }
+
+    .card-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    .meta-k { font-size: 9px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-3); margin-bottom: 3px; }
+    .meta-v { font-size: 11px; font-weight: 600; color: var(--text-2); }
+    .meta-v.hot { color: var(--p0); }
+
+    .card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      margin-top: 14px;
+      background: var(--paper);
+    }
+
+    .timer {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+    }
+
+    .timer-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--p0);
+      letter-spacing: 0.04em;
+    }
+
+    .timer-lbl {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .actions { display: flex; gap: 8px; }
+
+    .btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+    }
+
+    .btn-resolve {
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+    }
+
+    .btn-escalate {
+      background: var(--white);
+      color: var(--text-2);
+      border: 1px solid var(--border-2);
+    }
+
+    /* ── SEVERITY SYSTEM ────────────────────── */
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .badge-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    /* Vitals-strip at top — like a patient monitor display */
+    .vitals-strip {
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .vitals-code {
+      font-family: 'DM Mono', monospace;
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .vitals-reading {
+      text-align: right;
+    }
+
+    .vitals-reading-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    .vitals-reading-lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      color: var(--text-3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .badge-body { padding: 12px 16px 16px; border-top: 1px solid var(--border); }
+    .badge-name { font-size: 12px; font-weight: 600; color: var(--text-1); margin-bottom: 5px; }
+    .badge-desc { font-size: 10px; color: var(--text-3); line-height: 1.55; }
+
+    /* P0 */
+    .v-p0 .vitals-strip { background: var(--p0-lt); border-bottom: 1px solid var(--p0-mid); }
+    .v-p0 .vitals-code  { color: var(--p0); }
+    .v-p0 .vitals-reading-val { color: var(--p0); }
+
+    /* P1 */
+    .v-p1 .vitals-strip { background: var(--p1-lt); border-bottom: 1px solid var(--p1-mid); }
+    .v-p1 .vitals-code  { color: var(--p1); }
+    .v-p1 .vitals-reading-val { color: var(--p1); }
+
+    /* P2 */
+    .v-p2 .vitals-strip { background: var(--p2-lt); border-bottom: 1px solid var(--p2-mid); }
+    .v-p2 .vitals-code  { color: var(--p2); }
+    .v-p2 .vitals-reading-val { color: var(--p2); }
+
+    /* P3 */
+    .v-p3 .vitals-strip { background: var(--p3-lt); border-bottom: 1px solid var(--p3-mid); }
+    .v-p3 .vitals-code  { color: var(--p3); }
+    .v-p3 .vitals-reading-val { color: var(--p3); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-badge">
+        <div class="header-badge-dot"></div>
+        <div class="header-badge-text">Moodboard 03 · Incident Tracker</div>
+      </div>
+      <div class="header-title">Clean Room</div>
+    </div>
+    <div class="header-desc">
+      Medical device / precision instrument aesthetic.
+      Clinical white, single blue accent, severity as patient-monitor vitals.
+      When everything is on fire, showing up in white is a choice.
+      Zero decoration. DM Sans — approachable and precise.
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="stat">
+      <div class="stat-label">Active</div>
+      <div class="stat-val">4</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Critical P0</div>
+      <div class="stat-val red">2</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">High P1</div>
+      <div class="stat-val amber">1</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Assigned</div>
+      <div class="stat-val">3 / 4</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Live feed</div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+        <div class="header-badge-dot" style="width:7px;height:7px;"></div>
+        <div style="font-size:12px;font-weight:600;color:var(--blue);">Active</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PALETTE -->
+  <div class="section-label">Color System</div>
+  <div class="palette-row">
+    <div class="swatch">
+      <div class="sw-color" style="background:#F7F9FC;"></div>
+      <div class="sw-name">Paper</div>
+      <div class="sw-hex">#F7F9FC</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#FFFFFF;"></div>
+      <div class="sw-name">White</div>
+      <div class="sw-hex">#FFFFFF</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#0F1923;"></div>
+      <div class="sw-name">Ink</div>
+      <div class="sw-hex">#0F1923</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#0060CC;"></div>
+      <div class="sw-name">Blue</div>
+      <div class="sw-hex">#0060CC</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#DC2626;"></div>
+      <div class="sw-name">P0 Critical</div>
+      <div class="sw-hex">#DC2626</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#D97706;"></div>
+      <div class="sw-name">P1 High</div>
+      <div class="sw-hex">#D97706</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#2563EB;"></div>
+      <div class="sw-name">P2 Medium</div>
+      <div class="sw-hex">#2563EB</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#059669;"></div>
+      <div class="sw-name">P3 Low</div>
+      <div class="sw-hex">#059669</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#E2E8F0;"></div>
+      <div class="sw-name">Border</div>
+      <div class="sw-hex">#E2E8F0</div>
+    </div>
+  </div>
+
+  <!-- TYPOGRAPHY -->
+  <div class="section-label">Typography — DM Sans + DM Mono</div>
+  <div class="type-grid">
+    <div class="type-cell">
+      <div class="type-role">Display / Heading</div>
+      <div style="font-size:26px;font-weight:700;letter-spacing:-0.04em;line-height:1.15;color:var(--text-1);margin-bottom:8px;">Incident<br>Active</div>
+      <div class="type-note">DM Sans 700 · 26px</div>
+    </div>
+    <div class="type-cell">
+      <div class="type-role">Body</div>
+      <div style="font-size:13px;font-weight:400;line-height:1.65;color:var(--text-2);margin-bottom:8px;">API gateway returning 503 errors across all production endpoints. 3,241 RPM affected. SRE on-call notified at 14:18 UTC.</div>
+      <div class="type-note">DM Sans 400 · 13px</div>
+    </div>
+    <div class="type-cell">
+      <div class="type-role">Labels</div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:600;color:var(--text-2);">sarah.chen@eng</div>
+        <div style="font-size:11px;font-weight:600;color:var(--p0);">98.7% → 503</div>
+        <div style="font-size:11px;font-weight:600;color:var(--p3);">Resolved</div>
+        <div style="font-size:11px;font-weight:600;color:var(--blue);">api-gw-prod-01</div>
+      </div>
+      <div class="type-note">DM Sans 600 · 11px</div>
+    </div>
+    <div class="type-cell">
+      <div class="type-role">Mono / Data</div>
+      <div style="font-family:'DM Mono',monospace;display:flex;flex-direction:column;gap:7px;margin-bottom:8px;">
+        <div style="font-size:18px;font-weight:500;color:var(--p0);">47:32</div>
+        <div style="font-size:10px;color:var(--text-2);">INC-0042</div>
+        <div style="font-size:10px;color:var(--text-3);">14:18:03 UTC</div>
+        <div style="font-size:10px;color:var(--blue);">us-east-1</div>
+      </div>
+      <div class="type-note">DM Mono 500 · 10–18px</div>
+    </div>
+  </div>
+
+  <!-- INCIDENT CARD -->
+  <div class="section-label">Sample Incident Card</div>
+  <div class="card">
+    <div class="card-head">
+      <div class="card-head-id">INC-0042 · Production · us-east-1</div>
+      <div class="card-head-ts">Opened 14:18:03 UTC</div>
+    </div>
+    <div class="card-body">
+      <div class="sev-row">
+        <div class="vitals-badge p0">
+          <div class="vitals-badge-dot"></div>
+          P0 Critical
+        </div>
+        <div class="card-tag">Revenue impact · SLA breach · Customer-facing</div>
+      </div>
+      <div class="card-title">
+        API Gateway Returning 503s —<br>
+        All Production Endpoints Affected
+      </div>
+      <div class="card-meta">
+        <div>
+          <div class="meta-k">Assignee</div>
+          <div class="meta-v">sarah.chen@eng</div>
+        </div>
+        <div>
+          <div class="meta-k">System</div>
+          <div class="meta-v">api-gw-prod-01, 02</div>
+        </div>
+        <div>
+          <div class="meta-k">Error Rate</div>
+          <div class="meta-v hot">98.7% → 503</div>
+        </div>
+        <div>
+          <div class="meta-k">Throughput</div>
+          <div class="meta-v">3,241 RPM</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div class="timer">
+        <div class="timer-val">47:32</div>
+        <div class="timer-lbl">elapsed</div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-resolve">Resolve</button>
+        <button class="btn btn-escalate">Escalate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEVERITY SYSTEM — VITALS STYLE -->
+  <div class="section-label">Severity System — Patient Vitals Style</div>
+  <div class="badges-grid">
+    <div class="badge-card v-p0">
+      <div class="vitals-strip">
+        <div class="vitals-code">P0</div>
+        <div class="vitals-reading">
+          <div class="vitals-reading-val">CRITICAL</div>
+          <div class="vitals-reading-lbl">Severity</div>
+        </div>
+      </div>
+      <div class="badge-body">
+        <div class="badge-name">Revenue Impact</div>
+        <div class="badge-desc">Full outage. Customer-facing. All-hands response. SLA breach in progress.</div>
+      </div>
+    </div>
+    <div class="badge-card v-p1">
+      <div class="vitals-strip">
+        <div class="vitals-code">P1</div>
+        <div class="vitals-reading">
+          <div class="vitals-reading-val">HIGH</div>
+          <div class="vitals-reading-lbl">Severity</div>
+        </div>
+      </div>
+      <div class="badge-body">
+        <div class="badge-name">Degraded Service</div>
+        <div class="badge-desc">Major feature impaired. Escalated response. SLA: 15 minutes.</div>
+      </div>
+    </div>
+    <div class="badge-card v-p2">
+      <div class="vitals-strip">
+        <div class="vitals-code">P2</div>
+        <div class="vitals-reading">
+          <div class="vitals-reading-val">MEDIUM</div>
+          <div class="vitals-reading-lbl">Severity</div>
+        </div>
+      </div>
+      <div class="badge-body">
+        <div class="badge-name">Partial Outage</div>
+        <div class="badge-desc">Subset of users affected. Workaround available. 1-hour SLA.</div>
+      </div>
+    </div>
+    <div class="badge-card v-p3">
+      <div class="vitals-strip">
+        <div class="vitals-code">P3</div>
+        <div class="vitals-reading">
+          <div class="vitals-reading-val">LOW</div>
+          <div class="vitals-reading-lbl">Severity</div>
+        </div>
+      </div>
+      <div class="badge-body">
+        <div class="badge-name">Minor Issue</div>
+        <div class="badge-desc">No immediate user impact. Edge case. Scheduled for next sprint.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

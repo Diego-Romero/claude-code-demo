@@ -2,6 +2,16 @@
 
 A real-time incident tracker built as the live demo vehicle for a **Claude Code: Tips & Tricks** engineering presentation. The app is intentionally simple so the focus stays on the Claude Code workflows, not the product.
 
+## Live deployment
+
+| | URL |
+|---|---|
+| **App** | [diego-claude-code-demo.vercel.app](https://diego-claude-code-demo.vercel.app) |
+| **Presentation** | [diego-claude-code-demo.vercel.app/presentation.html](https://diego-claude-code-demo.vercel.app/presentation.html) |
+| **Moodboard 1** — Midnight Ops | [.../moodboard-1.html](https://diego-claude-code-demo.vercel.app/moodboard-1.html) |
+| **Moodboard 2** — Hazmat | [.../moodboard-2.html](https://diego-claude-code-demo.vercel.app/moodboard-2.html) |
+| **Moodboard 3** — Clean Room | [.../moodboard-3.html](https://diego-claude-code-demo.vercel.app/moodboard-3.html) |
+
 ## Presentation
 
 The slide deck lives in [`presentation.md`](./presentation.md) (Marp format) and is automatically converted to HTML during the build:

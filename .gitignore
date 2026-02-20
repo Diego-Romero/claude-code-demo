@@ -28,7 +28,6 @@ tests/e2e/.auth
 .vscode/
 *.pem
 .playwright-mcp/
-/public/moodboard-*.html
 /moodboard-*.png
 /presentation.html
 

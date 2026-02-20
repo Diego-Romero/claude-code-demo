@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moodboard 02 — Hazmat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #0A0A0A;
+      --black-2:  #141414;
+      --black-3:  #1C1C1C;
+      --white:    #F0EFE8;
+      --white-2:  #9A9890;
+      --white-3:  #484640;
+      --white-4:  #282624;
+      --orange:   #FF4800;
+      --amber:    #FF8C00;
+      --yellow:   #FFE000;
+      --green:    #00CC44;
+      --stripe-a: #FF4800;
+      --stripe-b: transparent;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      min-height: 100vh;
+      padding: 56px 64px;
+    }
+
+    .page { max-width: 1040px; margin: 0 auto; }
+
+    /* ── HEADER ─────────────────────────────── */
+    .header {
+      margin-bottom: 44px;
+      padding-bottom: 28px;
+      border-bottom: 3px solid var(--orange);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .header-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 4px;
+    }
+
+    .header-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 72px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 0.9;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .header-title span { color: var(--orange); }
+
+    .header-desc {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--white-2);
+      line-height: 1.7;
+      max-width: 280px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ── ALERT STRIP ────────────────────────── */
+    .alert-strip {
+      background: var(--orange);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 44px;
+    }
+
+    .alert-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--black);
+    }
+
+    .alert-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: rgba(0,0,0,0.6);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── SECTION ────────────────────────────── */
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--white-3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-label::after { content:''; flex:1; height:1px; background:var(--white-4); }
+
+    /* ── PALETTE ────────────────────────────── */
+    .palette-row {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 2px;
+      margin-bottom: 48px;
+    }
+
+    .swatch { display: flex; flex-direction: column; }
+    .sw-color { height: 48px; margin-bottom: 7px; }
+    .sw-name  { font-size: 8px; color: var(--white-2); letter-spacing: 0.04em; margin-bottom: 1px; }
+    .sw-hex   { font-family: 'Space Mono', monospace; font-size: 7px; color: var(--white-3); }
+
+    /* ── TYPOGRAPHY ─────────────────────────── */
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 2px;
+      margin-bottom: 48px;
+    }
+
+    .type-cell {
+      background: var(--black-2);
+      border: 1px solid var(--white-4);
+      padding: 20px;
+    }
+
+    .type-role {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white-3);
+      margin-bottom: 14px;
+    }
+
+    .type-note {
+      font-family: 'Space Mono', monospace;
+      font-size: 7px;
+      color: var(--white-3);
+      letter-spacing: 0.08em;
+      margin-top: 12px;
+    }
+
+    /* ── INCIDENT CARD ──────────────────────── */
+    .card-wrapper {
+      margin-bottom: 48px;
+    }
+
+    /* Caution tape stripe for P0 */
+    .caution-stripe {
+      height: 16px;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--orange),
+        var(--orange) 10px,
+        var(--black) 10px,
+        var(--black) 20px
+      );
+    }
+
+    .card {
+      background: var(--black-2);
+      border: 1px solid var(--orange);
+      border-top: none;
+    }
+
+    .card-head {
+      background: var(--orange);
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-head-id {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--black);
+    }
+
+    .card-head-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--black);
+    }
+
+    .card-body { padding: 24px 20px 20px; }
+
+    .card-severity-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .sev-block {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      background: var(--orange);
+      color: var(--black);
+    }
+
+    .tag-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      color: var(--white-3);
+      text-transform: uppercase;
+    }
+
+    .card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+
+    .card-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--white-4);
+      padding-top: 16px;
+    }
+
+    .meta-k { font-family: 'Space Mono', monospace; font-size: 7px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white-3); margin-bottom: 4px; }
+    .meta-v { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white-2); }
+    .meta-v.hot { color: var(--orange); font-weight: 700; }
+
+    .card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-top: 1px solid var(--white-4);
+      margin-top: 16px;
+    }
+
+    .timer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timer-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--orange);
+      letter-spacing: 0.04em;
+    }
+
+    .timer-lbl {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white-3);
+    }
+
+    .actions { display: flex; gap: 2px; }
+
+    .btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      cursor: pointer;
+    }
+
+    .btn-resolve {
+      background: var(--green);
+      color: var(--black);
+      border: none;
+    }
+
+    .btn-escalate {
+      background: transparent;
+      color: var(--orange);
+      border: 2px solid var(--orange);
+    }
+
+    /* ── SEVERITY SYSTEM ────────────────────── */
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .badge-cell {
+      background: var(--black-2);
+      border: 1px solid var(--white-4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge-cell.p0 {
+      border-color: var(--orange);
+    }
+
+    .badge-stripe {
+      height: 8px;
+      width: 100%;
+    }
+
+    .badge-cell.p0 .badge-stripe {
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--orange),
+        var(--orange) 6px,
+        var(--black) 6px,
+        var(--black) 12px
+      );
+    }
+
+    .badge-cell.p1 .badge-stripe { background: var(--amber); }
+    .badge-cell.p2 .badge-stripe { background: var(--yellow); }
+    .badge-cell.p3 .badge-stripe { background: var(--green); }
+
+    .badge-content { padding: 18px 18px 20px; }
+
+    .badge-role {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--white-3);
+      margin-bottom: 8px;
+    }
+
+    .badge-code {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 40px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .badge-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .badge-desc {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--white-3);
+      line-height: 1.55;
+    }
+
+    .c-or { color: var(--orange); }
+    .c-am { color: var(--amber); }
+    .c-yw { color: var(--yellow); }
+    .c-gn { color: var(--green); }
+    .c-w2 { color: var(--white-2); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-eyebrow">Moodboard 02 · Incident Tracker</div>
+        <div class="header-title">HAZ<span>MAT</span></div>
+      </div>
+      <div class="header-desc">
+        Own the danger vocabulary. True black, safety orange dominant,
+        diagonal caution-stripe borders on P0 cards.
+        The visual language of OSHA posters and hard hats — earned, not ironic.
+        Barlow Condensed 900 for headlines.
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERT STRIP -->
+  <div class="alert-strip">
+    <div class="alert-text">⚠ 2 Critical incidents in progress — immediate response required</div>
+    <div class="alert-meta">UTC 14:32:07 · 4 active · live</div>
+  </div>
+
+  <!-- PALETTE -->
+  <div class="section-label">Color System</div>
+  <div class="palette-row">
+    <div class="swatch">
+      <div class="sw-color" style="background:#0A0A0A;border:1px solid #282624;"></div>
+      <div class="sw-name">Black</div>
+      <div class="sw-hex">#0A0A0A</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#141414;"></div>
+      <div class="sw-name">Surface</div>
+      <div class="sw-hex">#141414</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#F0EFE8;"></div>
+      <div class="sw-name">Off-white</div>
+      <div class="sw-hex">#F0EFE8</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#FF4800;"></div>
+      <div class="sw-name">Safety Orange</div>
+      <div class="sw-hex">#FF4800</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#FF8C00;"></div>
+      <div class="sw-name">Amber</div>
+      <div class="sw-hex">#FF8C00</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#FFE000;"></div>
+      <div class="sw-name">Hazard Yellow</div>
+      <div class="sw-hex">#FFE000</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:#00CC44;"></div>
+      <div class="sw-name">Safety Green</div>
+      <div class="sw-hex">#00CC44</div>
+    </div>
+    <div class="swatch">
+      <div class="sw-color" style="background:repeating-linear-gradient(-45deg,#FF4800,#FF4800 8px,#0A0A0A 8px,#0A0A0A 16px);"></div>
+      <div class="sw-name">Caution Tape</div>
+      <div class="sw-hex">CSS pattern</div>
+    </div>
+  </div>
+
+  <!-- TYPOGRAPHY -->
+  <div class="section-label">Typography — Barlow Condensed + Space Mono</div>
+  <div class="type-grid">
+    <div class="type-cell">
+      <div class="type-role">Display / Heading</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:0.95;color:var(--white);margin-bottom:8px;">INCIDENT<br>ACTIVE</div>
+      <div class="type-note">BC 900 · 44px · uppercase</div>
+    </div>
+    <div class="type-cell">
+      <div class="type-role">Subheading</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--white-2);line-height:1.3;margin-bottom:8px;">API Gateway<br>Returning 503s<br>Production Down</div>
+      <div class="type-note">BC 700 · 22px · uppercase</div>
+    </div>
+    <div class="type-cell">
+      <div class="type-role">Mono / Body</div>
+      <div style="font-family:'Space Mono',monospace;font-size:10px;line-height:1.7;color:var(--white-2);margin-bottom:8px;">API gateway returning 503 errors across all prod endpoints. SRE notified at 14:18 UTC. Rollback in progress.</div>
+      <div class="type-note">SM Regular · 10px</div>
+    </div>
+    <div class="type-cell">
+      <div class="type-role">Timer / Counter</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:52px;font-weight:900;color:var(--orange);letter-spacing:0.04em;line-height:1;margin-bottom:4px;">47:32</div>
+      <div style="font-family:'Space Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:0.18em;color:var(--white-3);">ELAPSED</div>
+      <div class="type-note">BC 900 · 52px · safety orange</div>
+    </div>
+  </div>
+
+  <!-- INCIDENT CARD -->
+  <div class="section-label">Sample Incident Card — P0 Critical</div>
+  <div class="card-wrapper">
+    <div class="caution-stripe"></div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-id">⚠ INC-0042 · P0 CRITICAL · PRODUCTION</div>
+        <div class="card-head-status">OPEN · 14:18:03 UTC</div>
+      </div>
+      <div class="card-body">
+        <div class="card-severity-row">
+          <div class="sev-block">P0 Critical</div>
+          <div class="tag-text">▲ Revenue Impact · Customer Facing · SLA Breached</div>
+        </div>
+        <div class="card-title">
+          API Gateway Returning 503s —<br>
+          All Production Endpoints Affected
+        </div>
+        <div class="card-meta">
+          <div>
+            <div class="meta-k">Assignee</div>
+            <div class="meta-v">sarah.chen@eng</div>
+          </div>
+          <div>
+            <div class="meta-k">System</div>
+            <div class="meta-v">api-gw-prod-01, 02</div>
+          </div>
+          <div>
+            <div class="meta-k">Error Rate</div>
+            <div class="meta-v hot">98.7% → 503</div>
+          </div>
+          <div>
+            <div class="meta-k">Throughput</div>
+            <div class="meta-v">3,241 RPM</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-foot">
+        <div class="timer">
+          <div class="timer-val">47:32</div>
+          <div class="timer-lbl">elapsed</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-resolve">✓ Resolve</button>
+          <button class="btn btn-escalate">▲ Escalate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEVERITY SYSTEM -->
+  <div class="section-label">Severity System — P0 → P3</div>
+  <div class="badges-grid">
+    <div class="badge-cell p0">
+      <div class="badge-stripe"></div>
+      <div class="badge-content">
+        <div class="badge-role">Critical</div>
+        <div class="badge-code c-or">P0</div>
+        <div class="badge-name c-or">Revenue Impact</div>
+        <div class="badge-desc">Full outage. All-hands. Wake people up. SLA breach.</div>
+      </div>
+    </div>
+    <div class="badge-cell p1">
+      <div class="badge-stripe"></div>
+      <div class="badge-content">
+        <div class="badge-role">High</div>
+        <div class="badge-code c-am">P1</div>
+        <div class="badge-name c-am">Degraded Service</div>
+        <div class="badge-desc">Major feature impaired. Escalated response, 15 min.</div>
+      </div>
+    </div>
+    <div class="badge-cell p2">
+      <div class="badge-stripe"></div>
+      <div class="badge-content">
+        <div class="badge-role">Medium</div>
+        <div class="badge-code c-yw">P2</div>
+        <div class="badge-name c-yw">Partial Outage</div>
+        <div class="badge-desc">Subset affected. Workaround available. 1-hour SLA.</div>
+      </div>
+    </div>
+    <div class="badge-cell p3">
+      <div class="badge-stripe"></div>
+      <div class="badge-content">
+        <div class="badge-role">Low</div>
+        <div class="badge-code c-gn">P3</div>
+        <div class="badge-name c-gn">Minor Issue</div>
+        <div class="badge-desc">No immediate impact. Edge case. Next sprint.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
