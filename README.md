@@ -55,6 +55,7 @@ A lightweight incident tracker where engineering teams can:
 
 - Node.js 18+
 - A [Convex account](https://dashboard.convex.dev/) (free)
+- A [Vercel account](https://vercel.com/) (free, for deployment)
 
 ### 1. Install dependencies
 
@@ -62,32 +63,58 @@ A lightweight incident tracker where engineering teams can:
 npm install
 ```
 
-### 2. Configure environment variables
+### 2. Create a Convex project
 
-Create `.env.local`:
+```bash
+npx convex dev
+```
+
+Follow the prompts to log in and create a new project. This will create `.env.local` with `CONVEX_DEPLOYMENT` and `NEXT_PUBLIC_CONVEX_URL` auto-populated. Keep this terminal running — it syncs the backend in real time.
+
+### 3. Complete `.env.local`
+
+Add the remaining variables:
 
 ```
-CONVEX_DEPLOYMENT=...
-NEXT_PUBLIC_CONVEX_URL=...
-NEXT_PUBLIC_CONVEX_SITE_URL=...
-AUTH_SECRET=...
+# Added automatically by `npx convex dev`:
+CONVEX_DEPLOYMENT=dev:your-deployment-name
+NEXT_PUBLIC_CONVEX_URL=https://your-deployment-name.convex.cloud
+NEXT_PUBLIC_CONVEX_SITE_URL=https://your-deployment-name.convex.site
+
+# Generate with: openssl rand -hex 32
+AUTH_SECRET=your-secret-here
+
+# Demo credentials — set to whatever you want
 DEMO_EMAIL=demo@incident.dev
 DEMO_PASSWORD=demo1234
 DEMO_NAME=Demo User
 ```
 
-### 3. Start the dev server
+### 4. Start the dev server
 
 ```bash
 npm run dev     # Next.js + Convex in parallel
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) and sign in with the demo credentials.
+Visit [http://localhost:3000](http://localhost:3000) and sign in with your demo credentials.
 
-### 4. Seed sample data (optional)
+### 5. Seed sample data (optional)
 
 ```bash
 npx convex run seed:run
+```
+
+### Deploying to Vercel
+
+```bash
+vercel                  # link project and deploy preview
+vercel --prod           # promote to production
+```
+
+Set all env vars from `.env.local` in Vercel, plus one extra required by NextAuth v5:
+
+```bash
+vercel env add AUTH_URL production   # set to your production URL, e.g. https://your-app.vercel.app
 ```
 
 ## Running tests
